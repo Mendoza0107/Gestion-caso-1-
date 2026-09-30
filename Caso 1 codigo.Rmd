@@ -93,7 +93,7 @@ library(knitr)
 library(plotly)
 ```
 
-El modelo será estimado mediante Mínimos Cuadrados Ordinarios (MCO), utilizando una muestra de 141 países con información correspondiente al año 2022, obtenida de Our World in Data. La generación total de electricidad será la variable dependiente y se analizará su relación con factores socioeconómicos y energéticos como la población, el PIB, el consumo de electricidad per cápita, el acceso a electricidad y el continente.
+El modelo será estimado mediante Mínimos Cuadrados Ordinarios (MCO), utilizando una muestra de 140 países con información correspondiente al año 2022, obtenida de Our World in Data. La generación total de electricidad será la variable dependiente y se analizará su relación con factores socioeconómicos y energéticos como la población, el PIB, el consumo de electricidad per cápita, el acceso a electricidad y el continente.
 
 ```{r Tabla modelo}
 Tabla_modelo <- data.frame(
@@ -1290,7 +1290,7 @@ knitr::kable(
     "Porcentaje (%)",
     "Porcentaje Acumulado (%)"
   ),
-  caption = "Distribución de frecuencias de los países según continente"
+  caption = "Tabla 6: Distribución de frecuencias de los países según continente"
 )
 ```
 
@@ -1394,7 +1394,7 @@ names(tabla_final) <- c(
 
 kbl(
   tabla_final,
-  caption = "Resultados del modelo de regresión lineal múltiple",
+  caption = "Tabla 7: Resultados del modelo de regresión lineal múltiple",
   align = c("l", "r", "r", "r", "r", "c")
 ) %>%
   kable_styling(
@@ -1424,171 +1424,30 @@ kbl(
 ```
 
 
-# 4.1 Prediccion de la generacion de electricidad
+El intercepto del modelo es 1,797 TWh y presenta un valor p de 0,9864, por lo que no es estadísticamente significativo. Este valor representa la generación esperada cuando las variables cuantitativas toman el valor de cero y el país pertenece al continente de referencia. Sin embargo, estas condiciones no representan un escenario realista para los países analizados, por lo que el intercepto tiene principalmente una función matemática dentro del modelo.
 
-La siguiente tabla presenta las predicciones de generación de electricidad para cinco escenarios hipotéticos construidos a partir del modelo de regresión lineal múltiple. Cada escenario considera diferentes valores de población, PIB total, consumo de electricidad per cápita, acceso a electricidad y continente. A partir de estas características, el modelo estima la generación total de electricidad expresada en teravatios-hora (TWh).
+En cuanto a la población, el coeficiente aparece como cero debido a la escala en la que está medida la variable, ya que se encuentra expresada en número de habitantes. Su valor p es 0,2443, por lo que no presenta una asociación estadísticamente significativa con la generación de electricidad una vez se mantienen constantes las demás variables del modelo. Esto no significa que la población no tenga relación con la generación, sino que su efecto individual no resulta significativo al analizarla conjuntamente con los demás factores.
 
-```{r Predicciones}
-```{r predicciones}
+El PIB total es la única variable cuantitativa que presenta una asociación estadísticamente significativa con la generación de electricidad (p < 0,0001). Aunque su coeficiente aparece como cero en la tabla debido a que el PIB está expresado en dólares y, por tanto, el efecto de un solo dólar es muy pequeño, el estadístico t de 21,16 muestra una relación positiva y claramente significativa. En otras palabras, manteniendo constantes las demás variables, los países con un PIB total mayor tienden a presentar una mayor generación de electricidad.
 
-# ============================================================
-# PREPARAR VARIABLE CATEGÓRICA
-# ============================================================
+Para el consumo de electricidad per cápita, el coeficiente estimado es 0,00277, lo que indica una asociación positiva con la generación. Sin embargo, esta relación no es estadísticamente significativa (p = 0,6180) después de controlar por las demás variables. De forma similar, el acceso a electricidad presenta un coeficiente de −0,68043 y un valor p de 0,6638, por lo que tampoco se encuentra evidencia suficiente de una asociación estadísticamente significativa dentro del modelo.
 
-Base_datos$Continente <- factor(Base_datos$Continente)
+Para la variable continente, Africa funciona como categoría de referencia. Frente a ella, Asia presenta una diferencia estimada de 1,96 TWh, Europe de −39,27 TWh, North America de −65,99 TWh, Oceania de −6,87 TWh y South America de −9,03 TWh, manteniendo constantes las demás variables. Sin embargo, ninguna de estas diferencias es estadísticamente significativa, ya que todos sus valores p son superiores a 0,05. Por lo tanto, con esta muestra y una vez considerados simultáneamente los demás factores, no se encuentra evidencia suficiente para afirmar que la generación difiera por continente respecto a Africa.
 
-
-# ============================================================
-# ESTIMAR EL MODELO
-# ============================================================
-
-Modelo_final <- lm(
-  Generacion ~ Poblacion + PIB + Consumo + Acceso + Continente,
-  data = Base_datos
-)
+Finalmente, el modelo presenta un R² ajustado de 0,9192, lo que indica que aproximadamente el 91,92 % de la variabilidad observada en la generación de electricidad entre los países de la muestra es explicada conjuntamente por las variables incluidas. Además, el estadístico F es 176,75 y el valor p global es menor a 0,0001, lo que indica que el modelo, considerado en conjunto, es estadísticamente significativo. Estos resultados muestran una alta capacidad explicativa del modelo para los 140 países analizados, aunque posteriormente es necesario revisar los supuestos y diagnósticos de la regresión antes de establecer las conclusiones finales.
 
 
-# ============================================================
-# CREAR CINCO ESCENARIOS HIPOTÉTICOS
-# ============================================================
 
-escenarios <- data.frame(
-  
-  Poblacion = as.numeric(c(
-    quantile(Base_datos$Poblacion, 0.10, na.rm = TRUE),
-    quantile(Base_datos$Poblacion, 0.25, na.rm = TRUE),
-    quantile(Base_datos$Poblacion, 0.50, na.rm = TRUE),
-    quantile(Base_datos$Poblacion, 0.75, na.rm = TRUE),
-    quantile(Base_datos$Poblacion, 0.90, na.rm = TRUE)
-  )),
-  
-  PIB = as.numeric(c(
-    quantile(Base_datos$PIB, 0.10, na.rm = TRUE),
-    quantile(Base_datos$PIB, 0.25, na.rm = TRUE),
-    quantile(Base_datos$PIB, 0.50, na.rm = TRUE),
-    quantile(Base_datos$PIB, 0.75, na.rm = TRUE),
-    quantile(Base_datos$PIB, 0.90, na.rm = TRUE)
-  )),
-  
-  Consumo = as.numeric(c(
-    quantile(Base_datos$Consumo, 0.10, na.rm = TRUE),
-    quantile(Base_datos$Consumo, 0.25, na.rm = TRUE),
-    quantile(Base_datos$Consumo, 0.50, na.rm = TRUE),
-    quantile(Base_datos$Consumo, 0.75, na.rm = TRUE),
-    quantile(Base_datos$Consumo, 0.90, na.rm = TRUE)
-  )),
-  
-  Acceso = as.numeric(c(
-    quantile(Base_datos$Acceso, 0.10, na.rm = TRUE),
-    quantile(Base_datos$Acceso, 0.25, na.rm = TRUE),
-    quantile(Base_datos$Acceso, 0.50, na.rm = TRUE),
-    quantile(Base_datos$Acceso, 0.75, na.rm = TRUE),
-    quantile(Base_datos$Acceso, 0.90, na.rm = TRUE)
-  )),
-  
-  Continente = c(
-    "Africa",
-    "Asia",
-    "Europe",
-    "North America",
-    "South America"
-  )
-)
-
-
-# ============================================================
-# IGUALAR LOS NIVELES DE CONTINENTE CON LA BASE ORIGINAL
-# ============================================================
-
-escenarios$Continente <- factor(
-  escenarios$Continente,
-  levels = levels(Base_datos$Continente)
-)
-
-
-# ============================================================
-# CALCULAR LA GENERACIÓN PREDICHA
-# ============================================================
-
-escenarios$Generacion_predicha <- predict(
-  Modelo_final,
-  newdata = escenarios
-)
-
-
-# ============================================================
-# PREPARAR TABLA
-# ============================================================
-
-tabla_predicciones <- escenarios %>%
-  mutate(
-    Poblacion = round(Poblacion, 0),
-    PIB = round(PIB, 0),
-    Consumo = round(Consumo, 2),
-    Acceso = round(Acceso, 2),
-    Generacion_predicha = round(Generacion_predicha, 2)
-  ) %>%
-  rename(
-    `Población` = Poblacion,
-    `PIB total (USD)` = PIB,
-    `Consumo (kWh per cápita)` = Consumo,
-    `Acceso (%)` = Acceso,
-    `Continente` = Continente,
-    `Generación predicha (TWh)` = Generacion_predicha
-  )
-
-
-# ============================================================
-# MOSTRAR TABLA
-# ============================================================
-
-kbl(
-  tabla_predicciones,
-  caption = "Predicciones de generación de electricidad para diferentes escenarios",
-  align = c("r", "r", "r", "r", "c", "r"),
-  format.args = list(
-    big.mark = ",",
-    decimal.mark = ".",
-    scientific = FALSE
-  )
-) %>%
-  kable_styling(
-    bootstrap_options = c(
-      "striped",
-      "hover",
-      "condensed"
-    ),
-    full_width = FALSE,
-    font_size = 13,
-    position = "center"
-  ) %>%
-  row_spec(
-    0,
-    background = "#1F3A5F",
-    color = "white",
-    bold = TRUE
-  ) %>%
-  column_spec(
-    1:6,
-    width = "2.7cm"
-  ) %>%
-  footnote(
-    general = paste(
-      "Elaboración propia con base en Our World in Data, 2022.",
-      "Las predicciones corresponden a escenarios hipotéticos construidos",
-      "a partir de la distribución de las variables de la muestra."
-    ),
-    general_title = "Nota:",
-    footnote_as_chunk = TRUE
-  )
-
-```
 
 # 5 Resultados del modelo
 
 ## 5.1 Diagnostico grafico de supuestos
 
-## 5.1.1 Lineal
+Para evaluar la validez del modelo de regresión lineal múltiple se realizó un diagnóstico gráfico de sus principales supuestos. Este análisis permite revisar el comportamiento de los residuos y detectar posibles problemas relacionados con la linealidad, normalidad y homocedasticidad, así como la presencia de observaciones que puedan afectar el ajuste del modelo. Cada uno de estos aspectos se analiza a continuación mediante los gráficos correspondientes.
+
+### 5.1.1 Lineal
+
+El supuesto de linealidad se evaluó mediante el gráfico de residuos frente a los valores ajustados. En este caso, los residuos no se distribuyen de manera completamente aleatoria alrededor de cero, ya que la línea de tendencia presenta una curvatura marcada, especialmente a medida que aumentan los valores ajustados de generación. Además, se observan algunas observaciones alejadas del resto, principalmente en los niveles más altos de generación. Este comportamiento sugiere que el supuesto de linealidad no se cumple completamente y que el modelo lineal puede tener dificultades para representar adecuadamente la relación en los países con niveles de generación más elevados. Este resultado se tendrá en cuenta junto con los demás diagnósticos antes de establecer las conclusiones finales del modelo.
 
 ```{r Residuos valores ajustados}
 
@@ -1710,7 +1569,9 @@ print(resid_vs_ajustados)
 ```
 
 
-## 5.1.2 Normalidad
+### 5.1.2 Normalidad
+
+La normalidad de los residuos se evaluó mediante el gráfico Q-Q, comparando los cuantiles observados de los residuos con los esperados bajo una distribución normal. Cuando los puntos se mantienen próximos a la línea de referencia, se considera que los residuos presentan un comportamiento cercano a la normalidad.
 
 ```{r normalidad-qq, fig.width=10, fig.height=6}
 
@@ -1806,11 +1667,11 @@ print(G_qq)
 ```
 
 
+El gráfico muestra que los residuos se ajustan razonablemente a la línea de referencia en la parte central de la distribución. Sin embargo, hacia ambos extremos los puntos comienzan a separarse de manera considerable, con algunas observaciones especialmente alejadas de la línea. La desviación es particularmente evidente en la cola superior, donde aparece un residuo mucho mayor que el resto. Por lo tanto, el supuesto de normalidad no se cumple completamente, principalmente por la presencia de residuos extremos. Este comportamiento es coherente con la alta dispersión observada previamente en la generación de electricidad entre los países y deberá tenerse en cuenta al interpretar los resultados del modelo.
 
 
+Como complemento al gráfico Q-Q, se analizó la distribución de los residuos mediante un histograma acompañado de la densidad observada y la distribución normal teórica. Este gráfico permite evaluar si los residuos se concentran alrededor de cero y si su forma se aproxima a la esperada bajo el supuesto de normalidad.
 
-
-## Distribucion de los residuos del modelo
 
 ```{r distribucion-residuos, fig.width=10, fig.height=6}
 
@@ -1937,10 +1798,12 @@ print(G_residuos)
 ```
 
 
+La distribución de los residuos presenta una concentración marcada alrededor de valores cercanos a cero, pero su forma difiere de manera importante de la distribución normal teórica. La densidad observada muestra un pico mucho más pronunciado y una mayor presencia de valores alejados del centro, incluyendo algunos residuos extremos tanto negativos como positivos. Esto indica que la distribución no es simétrica ni sigue adecuadamente la forma esperada bajo normalidad. En conjunto con lo observado en el gráfico Q-Q, se concluye que el supuesto de normalidad de los residuos no se cumple completamente, principalmente por la concentración central y la presencia de observaciones extremas.
 
 
+### 5.1.3 Homocedasticidad
 
-## 5.1.3 Homocedasticidad
+El supuesto de homocedasticidad se evaluó mediante el gráfico Scale-Location, que permite observar si la dispersión de los residuos se mantiene aproximadamente constante a lo largo de los valores ajustados. Una tendencia relativamente horizontal indicaría una varianza estable, mientras que cambios marcados en la dispersión pueden evidenciar problemas de heterocedasticidad.
 
 
 ```{r scale-location , fig.width=10, fig.height=6}
@@ -2082,9 +1945,15 @@ print(G_scale)
 ```
 
 
+En el gráfico se observa que la dispersión de los residuos no permanece constante a medida que aumentan los valores ajustados de generación. La línea de tendencia presenta un crecimiento marcado y alcanza sus valores más altos en los países con mayores niveles de generación estimada. Además, algunas observaciones se encuentran considerablemente alejadas del grupo principal. Este comportamiento indica la presencia de heterocedasticidad, por lo que el supuesto de varianza constante de los errores no se cumple adecuadamente. Esto sugiere que la precisión del modelo no es uniforme para todos los países, especialmente en aquellos con niveles de generación más elevados.
 
 
-## 5.1.4 VIF
+
+
+### 5.1.4 VIF
+
+La multicolinealidad entre las variables explicativas se evaluó mediante el Factor de Inflación de la Varianza (VIF). Debido a que el modelo incluye Continente, una variable categórica con varios niveles, se utilizó el GVIF ajustado para facilitar la comparación entre los términos del modelo. Valores elevados indicarían que algunas variables comparten demasiada información entre sí, lo que podría reducir la precisión de los coeficientes estimados.
+
 
 ```{r vif-modelo}
 
@@ -2142,7 +2011,7 @@ if (is.matrix(vif_resultados)) {
 # Presentar tabla
 kbl(
   tabla_vif,
-  caption = "Análisis de multicolinealidad mediante VIF/GVIF",
+  caption = "Tabla 8: Análisis de multicolinealidad mediante VIF/GVIF",
   align = "c"
 ) %>%
   kable_styling(
@@ -2173,8 +2042,11 @@ kbl(
 
 ```
 
+Los resultados muestran que todas las variables presentan valores de GVIF ajustado dentro de rangos aceptables, por lo que no se evidencian problemas importantes de multicolinealidad en el modelo. Los valores más altos corresponden al PIB (1,806) y la Población (1,797), aunque ambos se mantienen en niveles adecuados. Por su parte, Acceso presenta un valor de 1,580, Consumo de 1,217 y Continente de 1,117. En conjunto, estos resultados indican que, aunque existe cierta relación entre algunas de las variables explicativas, esta no alcanza niveles que representen un problema relevante para la estimación del modelo. Por lo tanto, el supuesto relacionado con la ausencia de multicolinealidad importante se considera satisfecho.
 
 
+
+# 6 Conclusiones
 
 
 
