@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+body {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  line-height: 1.75 !important;
+  color: #2B2B2B !important;
+  background-color: #FAF7F0 !important;
+  font-size: 16.5px !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding: 2rem 3rem 4rem 3rem !important;
+  box-shadow: 0 0 40px rgba(14,58,76,0.1) !important;
+  border-left: 6px double #1E5F74 !important;
+  border-right: 6px double #1E5F74 !important;
+}
+
+/* ===== HEADER ===== */
+#header {
+  background: linear-gradient(135deg, #0E3A4C 0%, #1E5F74 55%, #B8860B 100%) !important;
+  color: #FAF7F0 !important;
+  padding: 3.5rem 2rem 3rem 2rem !important;
+  margin: -2rem -3rem 2.5rem -3rem !important;
+  text-align: center !important;
+  border-bottom: 6px double #D4AF37 !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+#header::before, #header::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important; bottom: 0 !important;
+  width: 40px !important;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 8px, rgba(212,175,55,0.35) 8px 10px),
+    linear-gradient(180deg, #FAF7F0, #E6E1D6) !important;
+  border-left: 2px solid #D4AF37 !important;
+  border-right: 2px solid #D4AF37 !important;
+}
+#header::before { left: 0 !important; }
+#header::after  { right: 0 !important; }
+
+#header .title {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: #FAF7F0 !important;
+  font-size: 2.3rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  margin: 0 0 1rem 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5) !important;
+  line-height: 1.25 !important;
+}
+#header .subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  color: rgba(255,255,255,0.95) !important;
+  font-size: 1.2rem !important;
+  font-weight: 400 !important;
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  margin: 0.5rem 0 !important;
+}
+#header .author, #header .date {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 1rem !important;
+  font-weight: 300 !important;
+  letter-spacing: 1.5px !important;
+  margin: 0.2rem 0 !important;
+}
+
+/* ===== ENCABEZADOS ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: #1E5F74 !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1rem !important;
+  border-bottom: none !important;
+  font-weight: 600 !important;
+}
+h1 {
+  font-size: 2.5rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  color: #1E5F74 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 1rem !important;
+  border-bottom: 3px double #D4AF37 !important;
+}
+h1::before { content: "❖ " !important; color: #D4AF37 !important; }
+h1::after  { content: " ❖" !important; color: #D4AF37 !important; }
+
+h2 {
+  font-size: 1.85rem !important;
+  color: #0E3A4C !important;
+  border-left: 6px solid #C1440E !important;
+  padding: 0.5rem 0 0.5rem 1.2rem !important;
+  background: linear-gradient(90deg, #F4DDD1, transparent) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  margin-top: 3rem !important;
+}
+h3 {
+  font-size: 1.5rem !important;
+  color: #C1440E !important;
+  border-bottom: 2px solid #D7E6EB !important;
+  padding-bottom: 0.5rem !important;
+  font-style: italic !important;
+}
+h4 { font-size: 1.25rem !important; color: #1E5F74 !important; }
+h5 { font-size: 1.1rem !important; color: #6B7F3A !important; text-transform: uppercase !important; letter-spacing: 1px !important; }
+h6 { font-size: 1rem !important; color: #722F37 !important; font-style: italic !important; }
+
+/* En el header los títulos son blancos */
+#header h1, #header h2, #header h3, #header h4 { color: #FAF7F0 !important; }
+#header h1::before, #header h1::after { content: "" !important; }
+
+/* ===== PÁRRAFOS ===== */
+p { text-align: justify !important; hyphens: auto; margin-bottom: 1.1rem !important; }
+
+/* ===== TOC ===== */
+#TOC {
+  background: linear-gradient(135deg, #F5EFE0, #FAF7F0) !important;
+  border: 2px solid #1E5F74 !important;
+  border-top: 6px double #D4AF37 !important;
+  border-radius: 10px !important;
+  padding: 1.8rem 2rem !important;
+  margin: 2rem 0 !important;
+  box-shadow: 0 4px 24px rgba(14,58,76,0.15) !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+}
+#TOC::before {
+  content: "❖ Índice de Contenidos ❖";
+  display: block;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1E5F74;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #D4AF37;
+  text-align: center;
+  letter-spacing: 2px;
+}
+#TOC ul { list-style: none !important; padding-left: 0 !important; }
+#TOC li { margin: 0.5rem 0 !important; }
+#TOC a {
+  color: #0E3A4C !important;
+  text-decoration: none !important;
+  font-family: 'EB Garamond', Georgia, serif !important;
+  font-size: 1.02rem !important;
+  padding: 0.35rem 0.8rem !important;
+  display: block !important;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+#TOC a:hover {
+  color: #C1440E !important;
+  background: #F4DDD1 !important;
+  border-left-color: #C1440E;
+}
+#TOC ul ul { padding-left: 1.5rem !important; }
+#TOC ul ul a { font-size: 0.94rem !important; color: #6B7F3A !important; font-style: italic !important; }
+
+/* ===== CÓDIGO ===== */
+pre, code { font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important; }
+pre.sourceCode, pre {
+  background: #FAF7F0 !important;
+  color: #2B2B2B !important;
+  padding: 15px !important;
+  border: 1px solid #D7E6EB !important;
+  border-left: 5px solid #1E5F74 !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 15px 0 !important;
+  font-size: 0.88em !important;
+  box-shadow: 0 2px 8px rgba(14,58,76,0.08) !important;
+}
+pre code { background: transparent !important; padding: 0 !important; border: none !important; color: #2B2B2B !important; }
+code:not(pre code) {
+  background: #D7E6EB !important;
+  color: #0E3A4C !important;
+  padding: 0.1rem 0.4rem !important;
+  border-radius: 3px !important;
+  font-size: 0.9em !important;
+  border: none !important;
+}
+
+/* ===== TABLAS ===== */
+table {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+  background: #FAF7F0 !important;
+  border: 2px solid #1E5F74 !important;
+  border-top: 6px double #D4AF37 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 6px 24px rgba(14,58,76,0.12) !important;
+}
+table thead th {
+  font-family: 'Cinzel', Georgia, serif !important;
+  background: linear-gradient(135deg, #1E5F74, #0E3A4C) !important;
+  color: #FAF7F0 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 0.85rem 1rem !important;
+  text-align: center !important;
+  border: none !important;
+  border-bottom: 3px solid #D4AF37 !important;
+}
+table td {
+  padding: 0.7rem 1rem !important;
+  border-bottom: 1px solid #D7E6EB !important;
+  vertical-align: top !important;
+}
+table tbody tr:hover { background: #D7E6EB !important; }
+table tbody tr:nth-child(even) { background: rgba(215,230,235,0.35) !important; }
+
+/* ===== BLOCKQUOTE ===== */
+blockquote {
+  background: linear-gradient(135deg, #E8EED9, #FAF7F0) !important;
+  border-left: 6px solid #6B7F3A !important;
+  border-top: 1px solid #D4AF37 !important;
+  border-bottom: 1px solid #D4AF37 !important;
+  padding: 1.2rem 1.8rem !important;
+  margin: 1.8rem 0 !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.12rem !important;
+  font-style: italic !important;
+  color: #0E3A4C !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+/* ===== FIGURAS ===== */
+.figure img { box-shadow: 0 4px 16px rgba(14,58,76,0.15) !important; border: 1px solid #D7E6EB !important; border-radius: 6px !important; }
+p.caption, .caption {
+  color: #6B7F3A !important;
+  font-style: italic !important;
+  border-left: 3px solid #D4AF37 !important;
+  padding-left: 0.8rem !important;
+  text-align: left !important;
+  margin-top: 0.5rem !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  body { padding: 1rem !important; border-left-width: 3px !important; border-right-width: 3px !important; }
+  #header { padding: 2.5rem 1rem !important; margin: -1rem -1rem 2rem -1rem !important; }
+  #header::before, #header::after { width: 22px !important; }
+  #header .title { font-size: 1.5rem !important; letter-spacing: 1px !important; }
+  h1 { font-size: 1.8rem !important; }
+  h2 { font-size: 1.4rem !important; }
+}

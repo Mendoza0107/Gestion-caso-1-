@@ -1,0 +1,381 @@
+---
+title: " Te amo"
+subtitle: "Santiago Mendoza"
+author: ""
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    theme: null
+    highlight: null
+    toc: true
+    toc_depth: 4
+    number_sections: true
+    fig_width: 8
+    fig_height: 5
+    fig_caption: true
+    df_print: paged
+    dev: "png"
+    keep_md: false
+    self_contained: true
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  /* Cafés oscuros */
+  --ink:         #1F1206;
+  --dark-brown:  #2E1A0F;
+  --chocolate:   #3E2416;
+  --coffee:      #5C3A21;
+  --walnut:      #6D4C2F;
+  --sienna:      #8B5E34;
+
+  /* Cálidos tierra */
+  --terracotta:  #A85834;
+  --rust:        #B4653A;
+  --amber:       #C9821B;
+
+  /* Dorados */
+  --bronze:      #8C6A1F;
+  --ochre:       #B8892E;
+  --gold:        #D4A017;
+  --gold-light:  #E8C766;
+  --gold-pale:   #F0DFA8;
+
+  /* Neutros cálidos */
+  --parchment:   #F5E6C8;
+  --cream:       #FBF3DD;
+  --marble:      #FAF0DC;
+  --beige:       #E7D3A8;
+
+  --ink-text:    #2B1810;
+}
+
+/* ===== FONDO EXTERIOR (fuera del papel) ===== */
+html {
+  background: var(--dark-brown) !important;
+  min-height: 100%;
+}
+
+/* ===== CUERPO: papel + meandro vertical a los lados ===== */
+body {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  line-height: 1.78 !important;
+  color: var(--ink-text) !important;
+  font-size: 16.5px !important;
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 0 90px !important;
+  background-color: var(--parchment) !important;
+  /* MEANDRO GRIEGO VERTICAL (izq y der) + relleno dorado */
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='52' viewBox='0 0 26 52'><path d='M22,2 L22,50 L4,50 L4,10 L18,10 L18,40 L8,40 L8,20 L14,20 L14,32 L11,32 L11,24' stroke='%232E1A0F' stroke-width='2.4' fill='none' stroke-linecap='square' stroke-linejoin='miter'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='52' viewBox='0 0 26 52'><path d='M22,2 L22,50 L4,50 L4,10 L18,10 L18,40 L8,40 L8,20 L14,20 L14,32 L11,32 L11,24' stroke='%232E1A0F' stroke-width='2.4' fill='none' stroke-linecap='square' stroke-linejoin='miter'/></svg>"),
+    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
+    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
+    linear-gradient(180deg, var(--parchment) 0%, var(--cream) 100%) !important;
+  background-position:
+    left 28px top 0,
+    right 28px top 0,
+    left 18px top 0,
+    right 18px top 0,
+    left top !important;
+  background-repeat:
+    repeat-y,
+    repeat-y,
+    repeat-y,
+    repeat-y,
+    no-repeat !important;
+  background-size:
+    26px 52px,
+    26px 52px,
+    3px 100%,
+    3px 100%,
+    100% 100% !important;
+  box-shadow:
+    0 0 80px rgba(0,0,0,0.55),
+    inset 0 0 60px rgba(140,106,31,0.10) !important;
+  min-height: 100vh !important;
+}
+
+/* ===== CONTENEDOR INTERNO ===== */
+.main-container, .container-fluid {
+  padding: 0 20px 3rem 20px !important;
+  max-width: 100% !important;
+}
+
+/* ===== HEADER ===== */
+#header {
+  margin: 0 -20px 3rem -20px !important;
+  padding: 3.5rem 2rem 3rem 2rem !important;
+  background:
+    linear-gradient(135deg, #2E1A0F 0%, #5C3A21 35%, #8B5E34 55%, #8C6A1F 100%) !important;
+  color: var(--parchment) !important;
+  text-align: center !important;
+  border-top: 5px solid var(--gold) !important;
+  border-bottom: 5px solid var(--gold) !important;
+  box-shadow:
+    inset 0 0 60px rgba(0,0,0,0.45),
+    0 8px 30px rgba(0,0,0,0.35) !important;
+  position: relative !important;
+}
+
+/* Cenefa griega horizontal dentro del header (arriba y abajo) */
+#header::before,
+#header::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 22px !important;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'><path d='M2,20 L2,4 L20,4 L20,18 L6,18 L6,8 L16,8 L16,14 L10,14 L10,11' stroke='%23D4A017' stroke-width='1.8' fill='none' stroke-linecap='square'/></svg>") !important;
+  background-repeat: repeat-x !important;
+  background-size: 44px 22px !important;
+  opacity: 0.85 !important;
+}
+#header::before { top: 6px !important; }
+#header::after  { bottom: 6px !important; }
+
+#header .title {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: var(--gold-pale) !important;
+  font-size: 2.25rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  margin: 1rem 0 1.2rem 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  text-shadow:
+    0 1px 0 #000,
+    2px 2px 12px rgba(0,0,0,0.6) !important;
+  line-height: 1.28 !important;
+}
+#header .subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  color: var(--gold-pale) !important;
+  font-size: 1.15rem !important;
+  font-weight: 400 !important;
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  margin: 0.5rem 0 !important;
+  opacity: 0.95;
+}
+#header .author, #header .date {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  color: var(--gold-light) !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 2px !important;
+  margin: 0.2rem 0 !important;
+}
+
+/* ===== ENCABEZADOS ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: var(--chocolate) !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1rem !important;
+  border-bottom: none !important;
+  font-weight: 600 !important;
+}
+h1 {
+  font-size: 2.3rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  color: var(--chocolate) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 1rem !important;
+  border-bottom: 4px double var(--gold) !important;
+  position: relative;
+}
+h1::before { content: "❖ " !important; color: var(--ochre) !important; }
+h1::after  { content: " ❖" !important; color: var(--ochre) !important; }
+
+h2 {
+  font-size: 1.75rem !important;
+  color: var(--dark-brown) !important;
+  border-left: 6px solid var(--terracotta) !important;
+  padding: 0.5rem 0 0.5rem 1.2rem !important;
+  background: linear-gradient(90deg, rgba(168,88,52,0.16), transparent) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  margin-top: 3rem !important;
+}
+h3 {
+  font-size: 1.42rem !important;
+  color: var(--terracotta) !important;
+  border-bottom: 2px solid var(--beige) !important;
+  padding-bottom: 0.5rem !important;
+  font-style: italic !important;
+}
+h4 { font-size: 1.22rem !important; color: var(--rust) !important; }
+h5 { font-size: 1.08rem !important; color: var(--walnut) !important; text-transform: uppercase !important; letter-spacing: 1px !important; }
+h6 { font-size: 1rem !important; color: var(--bronze) !important; font-style: italic !important; }
+
+#header h1, #header h2, #header h3, #header h4 { color: var(--gold-pale) !important; }
+#header h1::before, #header h1::after { content: "" !important; }
+
+/* ===== TEXTO ===== */
+p { text-align: justify !important; hyphens: auto; margin-bottom: 1.1rem !important; }
+
+/* ===== TOC ===== */
+#TOC {
+  background: linear-gradient(135deg, var(--cream), var(--parchment)) !important;
+  border: 2px solid var(--dark-brown) !important;
+  border-top: 6px double var(--gold) !important;
+  border-bottom: 6px double var(--gold) !important;
+  padding: 1.8rem 2rem !important;
+  margin: 2rem 0 !important;
+  box-shadow: 0 4px 24px rgba(46,26,15,0.20) !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+}
+#TOC::before {
+  content: "❖ Índice de Contenidos ❖";
+  display: block;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--chocolate);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--gold);
+  text-align: center;
+  letter-spacing: 2px;
+}
+#TOC ul { list-style: none !important; padding-left: 0 !important; }
+#TOC li { margin: 0.5rem 0 !important; }
+#TOC a {
+  color: var(--dark-brown) !important;
+  text-decoration: none !important;
+  font-family: 'EB Garamond', Georgia, serif !important;
+  font-size: 1.02rem !important;
+  padding: 0.35rem 0.8rem !important;
+  display: block !important;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+#TOC a:hover {
+  color: var(--terracotta) !important;
+  background: rgba(212,160,23,0.14) !important;
+  border-left-color: var(--gold);
+}
+#TOC ul ul { padding-left: 1.5rem !important; }
+#TOC ul ul a { font-size: 0.94rem !important; color: var(--walnut) !important; font-style: italic !important; }
+
+/* ===== CÓDIGO ===== */
+pre, code { font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important; }
+pre.sourceCode, pre {
+  background: var(--marble) !important;
+  color: var(--ink-text) !important;
+  padding: 15px !important;
+  border: 1px solid var(--beige) !important;
+  border-left: 5px solid var(--walnut) !important;
+  overflow-x: auto !important;
+  margin: 15px 0 !important;
+  font-size: 0.88em !important;
+  box-shadow: inset 0 0 20px rgba(140,106,31,0.06), 0 2px 8px rgba(46,26,15,0.10) !important;
+}
+pre code { background: transparent !important; padding: 0 !important; border: none !important; color: var(--ink-text) !important; }
+code:not(pre code) {
+  background: var(--beige) !important;
+  color: var(--chocolate) !important;
+  padding: 0.1rem 0.4rem !important;
+  border-radius: 3px !important;
+  font-size: 0.9em !important;
+}
+
+/* ===== TABLAS ===== */
+table {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+  background: var(--parchment) !important;
+  border: 2px solid var(--dark-brown) !important;
+  border-top: 6px double var(--gold) !important;
+  border-bottom: 6px double var(--gold) !important;
+  box-shadow: 0 6px 24px rgba(46,26,15,0.15) !important;
+}
+table thead th {
+  font-family: 'Cinzel', Georgia, serif !important;
+  background: linear-gradient(135deg, var(--chocolate), var(--dark-brown)) !important;
+  color: var(--gold-pale) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 0.85rem 1rem !important;
+  text-align: center !important;
+  border: none !important;
+  border-bottom: 3px solid var(--gold) !important;
+}
+table td {
+  padding: 0.7rem 1rem !important;
+  border-bottom: 1px solid var(--beige) !important;
+  vertical-align: top !important;
+}
+table tbody tr:hover { background: rgba(212,160,23,0.12) !important; }
+table tbody tr:nth-child(even) { background: rgba(231,211,168,0.35) !important; }
+
+/* ===== BLOCKQUOTE ===== */
+blockquote {
+  background: linear-gradient(135deg, rgba(140,106,31,0.12), var(--parchment)) !important;
+  border-left: 6px solid var(--bronze) !important;
+  border-top: 1px solid var(--gold) !important;
+  border-bottom: 1px solid var(--gold) !important;
+  padding: 1.2rem 1.8rem !important;
+  margin: 1.8rem 0 !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.12rem !important;
+  font-style: italic !important;
+  color: var(--chocolate) !important;
+}
+
+/* ===== FIGURAS ===== */
+.figure img {
+  box-shadow: 0 4px 16px rgba(46,26,15,0.20) !important;
+  border: 1px solid var(--beige) !important;
+  background: var(--cream) !important;
+  padding: 4px !important;
+}
+p.caption, .caption {
+  color: var(--walnut) !important;
+  font-style: italic !important;
+  border-left: 3px solid var(--gold) !important;
+  padding-left: 0.8rem !important;
+  text-align: left !important;
+  margin-top: 0.5rem !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  body {
+    padding: 0 65px !important;
+    background-size: 22px 44px, 22px 44px, 3px 100%, 3px 100%, 100% 100% !important;
+    background-position: left 20px top 0, right 20px top 0, left 14px top 0, right 14px top 0, left top !important;
+  }
+  #header .title { font-size: 1.5rem !important; letter-spacing: 1px !important; }
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.35rem !important; }
+}
+@media (max-width: 600px) {
+  body {
+    padding: 0 1rem !important;
+    background-image: linear-gradient(180deg, var(--parchment) 0%, var(--cream) 100%) !important;
+  }
+  #header { margin: 0 -1rem 2rem -1rem !important; padding: 2rem 1rem !important; }
+  #header::before, #header::after { height: 14px !important; background-size: 28px 14px !important; }
+  #header .title { font-size: 1.25rem !important; }
+  h1 { font-size: 1.5rem !important; }
+}
+</style>
+
+l
