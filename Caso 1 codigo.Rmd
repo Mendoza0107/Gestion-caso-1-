@@ -2318,5 +2318,13 @@ Los resultados muestran que todas las variables presentan valores de GVIF ajusta
 
 # 6 Conclusiones
 
+El análisis realizado permitió estudiar la relación entre la generación total de electricidad y diferentes características socioeconómicas y energéticas de 140 países durante 2022. En conjunto, el modelo presentó un R² ajustado de 0,9192 y fue estadísticamente significativo (p < 0,0001), lo que indica que las variables incluidas explican una proporción importante de las diferencias observadas en la generación de electricidad entre los países analizados.
 
+Sin embargo, al evaluar cada predictor de manera individual y manteniendo constantes las demás variables, únicamente el PIB total presentó una asociación estadísticamente significativa con la generación de electricidad (p < 0,0001). La población, el consumo de electricidad per cápita, el acceso a electricidad y el continente no mostraron evidencia suficiente de una asociación independiente al nivel de significancia del 5 %. Esto no implica que estas variables carezcan de relación con la generación, sino que dentro de la especificación utilizada su aporte adicional no resultó estadísticamente significativo.
+
+Los diagnósticos también muestran limitaciones importantes. Los residuos presentan una curvatura marcada, desviaciones respecto a la normalidad y cambios en su dispersión a medida que aumentan los valores ajustados, por lo que los supuestos de linealidad, normalidad y homocedasticidad no se cumplen completamente. En contraste, el análisis mediante VIF/GVIF no evidenció problemas importantes de multicolinealidad entre las variables explicativas. Además, la presencia de países con niveles de generación considerablemente superiores al resto influye en el comportamiento del modelo.
+
+Por lo tanto, el modelo permite responder parcialmente al objetivo de investigación: identifica al PIB como el factor que presenta la asociación estadística más clara con la generación total de electricidad dentro de las variables consideradas y muestra que, en conjunto, estas variables tienen una alta capacidad explicativa. No obstante, las dificultades encontradas en los supuestos impiden considerar la especificación lineal actual como una representación completamente adecuada de las relaciones presentes en los datos. Como extensión, sería conveniente evaluar transformaciones de las variables o especificaciones alternativas que permitan representar mejor las diferencias entre países y reducir la influencia de observaciones extremas.
+
+Finalmente, los resultados deben interpretarse como asociaciones y no como relaciones causales, debido a que el análisis utiliza información observacional de los países para un único año.
 
