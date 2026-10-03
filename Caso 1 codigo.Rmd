@@ -30,7 +30,7 @@ h3 {
 }
 </style>
 
-# 1 Introduccion
+# 1 Introducción
 
 La energía es un recurso fundamental para el desarrollo y funcionamiento de los países, ya que está presente en las actividades económicas, industriales y sociales que se realizan diariamente. Sin embargo, la cantidad de energía que genera cada país no es la misma y puede estar relacionada con diferentes características de su población y de su economía. Factores como el número de habitantes, el Producto Interno Bruto (PIB), el porcentaje de población que vive en zonas urbanas y el acceso a la electricidad pueden tener relación con la cantidad de energía generada.
 
@@ -42,43 +42,41 @@ El objetivo de este estudio es analizar la relación entre la generación total 
 
 Así, el estudio permitirá tener una visión más clara de cómo las características de los países pueden estar relacionadas con su capacidad de generación de energía y de qué manera los aspectos económicos, demográficos y sociales se relacionan entre sí.
 
-# 2 Metodologia 
 
-## 2.1 Metodo completo.
 
-El estudio parte de la búsqueda y selección de información disponible en Our World in Data, plataforma que reúne indicadores económicos, sociales, demográficos y energéticos de diferentes países. Para este análisis se decidió trabajar con información correspondiente al año 2022, tomando cada país como unidad de análisis. A partir de las diferentes bases consultadas, se seleccionaron variables que permitieran estudiar qué factores socioeconómicos y energéticos se encuentran relacionados con la generación total de electricidad de los países.
+# 2 Fuente y construcción de la base.
 
-Como variable dependiente se estableció la generación total de electricidad, medida en teravatios-hora (TWh). Como variables independientes se seleccionaron la población total, el PIB total, el consumo de electricidad per cápita y el porcentaje de población con acceso a electricidad. Adicionalmente, se incorporó el continente o región geográfica de cada país como variable categórica. La selección de estas variables busca considerar características relacionadas tanto con el tamaño y las condiciones económicas de los países como con su demanda y acceso a la energía.
+Para el desarrollo del estudio se construyó una base de datos a partir de información pública proveniente de Our World in Data (OWID) y el Banco Mundial, seleccionando los registros correspondientes al año 2022. La unidad de análisis es el país, por lo que cada fila de la base representa un país con información disponible para las variables consideradas en el estudio.
 
-Debido a que la información seleccionada se encontraba distribuida en diferentes conjuntos de datos, fue necesario construir una única base para el análisis. La integración se realizó utilizando el país y su código correspondiente como elementos comunes entre las bases, conservando las observaciones del año 2022 para las variables que cambian a través del tiempo. En el caso del continente o región, se utilizó como una característica geográfica de cada país, por lo que esta clasificación no depende del período analizado. Durante este proceso se revisarán también posibles valores faltantes, registros duplicados y observaciones que correspondan a regiones o agrupaciones de países y no a países individuales, con el propósito de obtener una base final consistente para el análisis.
+La generación total de electricidad, medida en teravatios-hora (TWh), se obtuvo de Electricity Mix de Our World in Data. La población total se obtuvo del Population & Demography Data Explorer de la misma plataforma, mientras que la clasificación por continente se tomó de World regions according to Our World in Data. Esta última fuente corresponde a las regiones definidas por OWID y utilizadas en sus gráficos y mapas.
 
-Una vez construida y depurada la base, se realizará inicialmente un análisis descriptivo de las variables. Para las variables cuantitativas se utilizarán medidas como la media, mediana, desviación estándar, valores mínimos y máximos, acompañadas de representaciones gráficas que permitan observar su distribución. Para la variable categórica se analizará la distribución de los países según su continente o región. Asimismo, se utilizarán gráficos de dispersión para explorar la relación entre la generación total de electricidad y cada una de las variables cuantitativas, además de identificar posibles valores atípicos o comportamientos que puedan afectar posteriormente el modelo.
+Por otra parte, el PIB total, expresado en dólares estadounidenses a precios actuales, y el consumo de energía eléctrica per cápita, expresado en kWh por habitante, fueron obtenidos del Banco Mundial. Finalmente, el acceso a electricidad, medido como el porcentaje de la población con acceso al servicio eléctrico, se obtuvo de la sección Access to Energy de Our World in Data.
 
-Posteriormente, se estimará un modelo de regresión lineal múltiple mediante mínimos cuadrados ordinarios, con el propósito de analizar la asociación entre la generación total de electricidad y las variables explicativas seleccionadas. De manera general, el modelo estará representado por: 
+Debido a que las variables se encontraban distribuidas en diferentes conjuntos de datos, fue necesario realizar un proceso de integración. Para ello, las bases fueron organizadas utilizando el código de país como identificador común, lo que permitió relacionar correctamente la información de generación, población, PIB, consumo de electricidad per cápita, acceso a electricidad y continente para cada país.
+
+Posteriormente, se realizó la depuración de los datos. Se revisaron posibles registros duplicados, valores faltantes y la correcta codificación de las variables. En el caso del consumo de electricidad per cápita se identificaron 49 observaciones sin información disponible, las cuales fueron reconocidas como valores faltantes. Para garantizar que todas las observaciones utilizadas en el análisis contaran con información completa en las variables seleccionadas, se trabajó únicamente con casos completos.
+
+Después del proceso de integración, revisión y depuración, la base final quedó conformada por 140 países, con información completa para las variables incluidas en el estudio. Esta base fue utilizada posteriormente para realizar el análisis descriptivo y estimar el modelo de regresión lineal múltiple.
+
+
+
+
+# 3 Metodología 
+
+
+El estudio se desarrolló mediante un enfoque cuantitativo de corte transversal, utilizando información correspondiente a 140 países durante el año 2022. Para analizar la relación entre la generación total de electricidad y diferentes características socioeconómicas y energéticas, se empleó un modelo de regresión lineal múltiple estimado mediante Mínimos Cuadrados Ordinarios (MCO). La variable dependiente fue la generación total de electricidad, expresada en teravatios-hora (TWh), mientras que como variables explicativas se incluyeron la población total, el PIB total, el consumo de electricidad per cápita, el acceso a electricidad y el continente. Estas variables fueron seleccionadas por su relación conceptual con el fenómeno estudiado: la población representa la dimensión demográfica de cada país, el PIB refleja el tamaño de su economía, el consumo per cápita representa la intensidad del uso de electricidad, el acceso a electricidad refleja la cobertura del servicio y el continente permite considerar diferencias geográficas entre los países.
+
+El modelo planteado se expresa como:
 
 $$Gen Elect = \beta_0 + \beta_1(Pob) + \beta_2(PIB) + \beta_3(Cons EelectPerCapital) + \beta_4(Continente) + \beta_5(Acceso Elect) + \epsilon $$
 
-Donde Yi representa la generación total de electricidad del país i; β0 corresponde al intercepto; los coeficientes β representan el cambio estimado en la variable dependiente asociado con cada predictor, manteniendo constantes las demás variables; y εi representa el término de error. Para la variable categórica correspondiente al continente o región se establecerá una categoría de referencia y se incorporarán las variables indicadoras necesarias para su inclusión en el modelo.
+En esta expresión, \(\beta_0\) corresponde al intercepto; \(\beta_1,\beta_2,\beta_3\) y \(\beta_4\) representan los coeficientes asociados a las variables cuantitativas; \(D_{ji}\) corresponde a las variables indicadoras utilizadas para representar el continente; \(\gamma_j\) representa sus respectivos coeficientes; y \(\varepsilon_i\) corresponde al término de error, que recoge aquellos factores relacionados con la generación eléctrica que no fueron incluidos en el modelo. Debido a que el continente es una variable categórica nominal con seis categorías, se incorporó mediante cinco variables indicadoras, utilizando África como categoría de referencia. Por esta razón, los coeficientes de Asia, Europa, América del Norte, Oceanía y América del Sur representan diferencias con respecto a África, manteniendo constantes las demás variables.
 
-Finalmente, se evaluará si el modelo cumple razonablemente con los principales supuestos de la regresión lineal múltiple. Se revisará la linealidad mediante la relación entre los residuos y los valores ajustados, la normalidad aproximada de los residuos mediante un gráfico Q-Q y la homocedasticidad a partir del comportamiento de su varianza. También se evaluará la posible presencia de observaciones atípicas o influyentes y se calculará el Factor de Inflación de la Varianza (VIF) para identificar posibles problemas de multicolinealidad entre las variables independientes. Estos análisis permitirán determinar si el modelo resulta adecuado para responder la pregunta de investigación y reconocer las limitaciones que puedan existir en su interpretación.
+Los coeficientes fueron estimados mediante MCO, método que busca minimizar la suma de los cuadrados de las diferencias entre los valores observados y los estimados por el modelo. Cada coeficiente cuantitativo representa el cambio esperado en la generación total de electricidad asociado con un aumento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Para evaluar los resultados se analizaron los coeficientes estimados, errores estándar, estadísticos t y valores p, además del R² ajustado y la prueba F para evaluar el comportamiento global del modelo. Finalmente, se realizaron diagnósticos de linealidad, normalidad de los residuos, homocedasticidad y multicolinealidad mediante VIF/GVIF, con el propósito de verificar el cumplimiento de los principales supuestos de la regresión lineal y considerar sus posibles limitaciones al momento de interpretar los resultados.
 
-## 2.2 Variables
 
-Las variables utilizadas en el estudio se dividen en dos grupos: una variable dependiente y cinco variables independientes. Como variable dependiente se seleccionó la generación total de electricidad, medida en teravatios-hora (TWh), la cual representa la cantidad de electricidad producida por cada país durante el año 2022. Se escogió esta variable porque permite comparar la magnitud de la producción eléctrica entre países y analizar qué características económicas, demográficas, energéticas y geográficas pueden estar relacionadas con las diferencias observadas. La generación de electricidad varía considerablemente entre países y se encuentra relacionada, entre otros aspectos, con el tamaño de la población y las características de sus economías (Our World in Data, 2026).
 
-En cuanto a las variables independientes, en primer lugar se incluyó la población total, ya que el número de habitantes puede estar estrechamente relacionado con las necesidades energéticas de un país. Una población más grande implica una mayor cantidad de hogares, establecimientos, servicios e infraestructura que requieren electricidad para su funcionamiento. Sin embargo, el tamaño de la población por sí solo no determina cuánto se genera, debido a que países con poblaciones similares pueden presentar niveles de consumo y características económicas muy diferentes. Por esta razón, esta variable permite incorporar al modelo la dimensión demográfica de cada país y analizar su relación con la generación total de electricidad (Our World in Data, 2026).
-
-El PIB total se incorporó para representar el tamaño de la economía de cada país. Esta variable es importante porque la actividad económica requiere energía para el funcionamiento de industrias, empresas, comercios, infraestructura y diferentes procesos productivos. Por lo tanto, países con economías de mayor tamaño pueden presentar también mayores necesidades de producción eléctrica. Además, considerar el PIB total junto con la población permite diferenciar el tamaño económico del tamaño demográfico, dos características que pueden estar relacionadas con la generación de electricidad de formas distintas. La relación entre energía y actividad económica ha sido ampliamente estudiada y se reconoce que el acceso y uso de energía forman parte importante del desarrollo de las actividades productivas (International Energy Agency [IEA], 2024).
-
-También se seleccionó el consumo de electricidad per cápita, debido a que permite observar cuánta electricidad utiliza en promedio cada habitante de un país. Esta variable complementa la población total, pues no todos los países presentan los mismos patrones de consumo. Dos países con una cantidad similar de habitantes pueden tener consumos eléctricos muy diferentes dependiendo de su actividad económica, infraestructura, condiciones de vida y utilización de tecnologías. Analizar el consumo en términos per cápita permite hacer comparaciones entre países controlando parcialmente las diferencias en el tamaño de su población y conocer si aquellos donde cada habitante consume más electricidad presentan también mayores niveles de generación total (Our World in Data, 2026).
-
-Otra de las variables consideradas es el acceso a electricidad, expresado como el porcentaje de la población que dispone de este servicio. Su inclusión permite incorporar al análisis la cobertura eléctrica existente dentro de cada país. Esta variable es diferente al consumo eléctrico, ya que un país puede presentar un consumo elevado entre quienes tienen acceso al servicio y, al mismo tiempo, mantener una parte de su población sin cobertura. De acuerdo con el Banco Mundial, el acceso universal a servicios energéticos asequibles y confiables continúa siendo un elemento fundamental para el desarrollo económico y social. Por esta razón, resulta pertinente analizar si los países con una mayor cobertura de electricidad presentan diferencias en sus niveles de generación total (World Bank, 2024).
-
-Finalmente, se incluyó el continente o región geográfica como variable categórica. Esta variable permite agrupar los países de acuerdo con su ubicación y considerar que las condiciones energéticas no son iguales en todas las regiones del mundo. Aspectos como la disponibilidad de recursos naturales, la infraestructura, las características económicas y los patrones de consumo pueden variar considerablemente entre regiones. Por esta razón, incluir el continente permite analizar si existen diferencias en la generación eléctrica entre grupos geográficos aun considerando las demás variables del modelo. Al ser una variable categórica nominal, sus categorías no presentan un orden entre sí y, para incorporar posteriormente a la regresión, se establecerá una de ellas como categoría de referencia, tal como se requiere para interpretar este tipo de variables dentro del modelo.
-
-En conjunto, las variables seleccionadas permiten estudiar la generación total de electricidad desde diferentes perspectivas. La población total representa la dimensión demográfica; el PIB total, el tamaño de la economía; el consumo de electricidad per cápita refleja las diferencias en el uso de electricidad; el acceso a electricidad incorpora la cobertura del servicio; y el continente o región permite considerar las diferencias geográficas entre países. De esta manera, el modelo busca analizar cómo estas características se encuentran asociadas con la generación total de electricidad durante 2022, sin asumir que dichas relaciones representan necesariamente efectos causales.
-
-## 2.3 Descricpion del modelo
+## 3.1 Descricpión del modelo
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -169,7 +167,7 @@ knitr::kable(
 
 
 
-## 2.4 Base de datos del estudio
+## 3.2 Base de datos del estudio
 
 Para este estudio se utiliza una base de datos construida a partir de información de Our World in Data para el año 2022. La base final está conformada por 140 países y reúne las variables seleccionadas para el modelo: generación total de electricidad, población, PIB total, consumo de electricidad per cápita, acceso a electricidad y continente. La información fue integrada mediante el código de cada país y posteriormente depurada para trabajar únicamente con observaciones completas y consistentes.
 
@@ -360,11 +358,11 @@ reactable(
 )
 ```
 
-# 3 Resultados descriptivos
+# 4 Resultados descriptivos
 
-## 3.1 Analisis Univariado de las variables del Modelo
+## 4.1 Análisis Univariado de las variables del Modelo
 
-### 3.1.1 Generacion de electricidad 
+### 4.1.1 Generación de electricidad 
 
 En la Tabla 1 se presentan las estadísticas descriptivas de la generación de electricidad de los países incluidos en el estudio, agrupadas por continente. Los resultados muestran diferencias importantes tanto en el nivel promedio de generación como en su dispersión, lo que permite observar que la producción de electricidad no se distribuye de manera uniforme entre los países analizados.
 
@@ -417,9 +415,9 @@ Los resultados muestran diferencias importantes en la generación de electricida
 
 
 
-## 3.2 Variables Explicativas Cuantitativas
+## 4.2 Variables Explicativas Cuantitativas
 
-### 3.2.1 Consumo de energia per capital
+### 4.2.1 Consumo de energía per capitá
 
 El consumo de electricidad per cápita representa la cantidad de electricidad consumida por habitante, expresada en kWh per cápita. En la tabla se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados según el continente al que pertenecen.
 
@@ -657,7 +655,7 @@ fig
 ```
 
 
-### 3.2.2 Poblacion total
+### 4.2.2 Población total
 
 La población total corresponde al número de habitantes de cada país incluido en el estudio. En la Tabla 3 se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados por continente.
 
@@ -897,7 +895,7 @@ fig
 ```
 
 
-### 3.2.3 PIB total 
+### 4.2.3 PIB total 
 
 El PIB total representa el valor de la producción económica de cada país, expresado en dólares estadounidenses (USD). En la Tabla 4 se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados por continente.
 
@@ -1139,7 +1137,7 @@ fig
 ```
 
 
-### 3.2.4 Acceso a electricidad
+### 4.2.4 Acceso a electricidad
 
 El acceso a electricidad corresponde al porcentaje de la población de cada país que cuenta con acceso a este servicio. En la Tabla 5 se presentan sus principales estadísticas descriptivas para los 140 países incluidos en la muestra, agrupados por continente.
 
@@ -1382,9 +1380,9 @@ fig
 
 
 
-## 3.3 Variable categorica: Distribucion de Frecuencias 
+## 4.3 Variable categórica: Distribución de Frecuencias 
 
-### 3.3.1 Continente
+### 4.3.1 Continente
 
 La variable continente permite clasificar los países de la muestra según su ubicación geográfica. En la Tabla 6 se presenta la distribución de frecuencias y porcentajes de los 140 países incluidos en el estudio.
 
@@ -1548,7 +1546,7 @@ fig
 
 
 
-# 4 Estimacion del modelo de regresion multiple
+# 5 Estimación del modelo de regresión multiple
 
 ```{r Tabla modelo regresion lineal multiple}
 library(broom)
@@ -1684,13 +1682,13 @@ Finalmente, el modelo presenta un R² ajustado de 0,9192, lo que indica que apro
 
 
 
-# 5 Resultados del modelo
+# 6 Resultados del modelo
 
-## 5.1 Diagnostico grafico de supuestos
+## 6.1 Diagnóstico gráfico de supuestos
 
 Para evaluar la validez del modelo de regresión lineal múltiple se realizó un diagnóstico gráfico de sus principales supuestos. Este análisis permite revisar el comportamiento de los residuos y detectar posibles problemas relacionados con la linealidad, normalidad y homocedasticidad, así como la presencia de observaciones que puedan afectar el ajuste del modelo. Cada uno de estos aspectos se analiza a continuación mediante los gráficos correspondientes.
 
-### 5.1.1 Lineal
+### 6.1.1 Lineal
 
 El supuesto de linealidad se evaluó mediante el gráfico de residuos frente a los valores ajustados. En este caso, los residuos no se distribuyen de manera completamente aleatoria alrededor de cero, ya que la línea de tendencia presenta una curvatura marcada, especialmente a medida que aumentan los valores ajustados de generación. Además, se observan algunas observaciones alejadas del resto, principalmente en los niveles más altos de generación. Este comportamiento sugiere que el supuesto de linealidad no se cumple completamente y que el modelo lineal puede tener dificultades para representar adecuadamente la relación en los países con niveles de generación más elevados. Este resultado se tendrá en cuenta junto con los demás diagnósticos antes de establecer las conclusiones finales del modelo.
 
@@ -1819,7 +1817,7 @@ print(resid_vs_ajustados)
 
 
 
-### 5.1.2 Normalidad
+### 6.1.2 Normalidad
 
 La normalidad de los residuos se evaluó mediante el gráfico Q-Q, comparando los cuantiles observados de los residuos con los esperados bajo una distribución normal. Cuando los puntos se mantienen próximos a la línea de referencia, se considera que los residuos presentan un comportamiento cercano a la normalidad.
 
@@ -2061,7 +2059,7 @@ print(G_residuos)
 La distribución de los residuos presenta una concentración marcada alrededor de valores cercanos a cero, pero su forma difiere de manera importante de la distribución normal teórica. La densidad observada muestra un pico mucho más pronunciado y una mayor presencia de valores alejados del centro, incluyendo algunos residuos extremos tanto negativos como positivos. Esto indica que la distribución no es simétrica ni sigue adecuadamente la forma esperada bajo normalidad. En conjunto con lo observado en el gráfico Q-Q, se concluye que el supuesto de normalidad de los residuos no se cumple completamente, principalmente por la concentración central y la presencia de observaciones extremas.
 
 
-### 5.1.3 Homocedasticidad
+### 6.1.3 Homocedasticidad
 
 El supuesto de homocedasticidad se evaluó mediante el gráfico Scale-Location, que permite observar si la dispersión de los residuos se mantiene aproximadamente constante a lo largo de los valores ajustados. Una tendencia relativamente horizontal indicaría una varianza estable, mientras que cambios marcados en la dispersión pueden evidenciar problemas de heterocedasticidad.
 
@@ -2215,7 +2213,7 @@ En el gráfico se observa que la dispersión de los residuos no permanece consta
 
 
 
-### 5.1.4 VIF
+### 6.1.4 VIF
 
 La multicolinealidad entre las variables explicativas se evaluó mediante el Factor de Inflación de la Varianza (VIF). Debido a que el modelo incluye Continente, una variable categórica con varios niveles, se utilizó el GVIF ajustado para facilitar la comparación entre los términos del modelo. Valores elevados indicarían que algunas variables comparten demasiada información entre sí, lo que podría reducir la precisión de los coeficientes estimados.
 
@@ -2316,7 +2314,7 @@ Los resultados muestran que todas las variables presentan valores de GVIF ajusta
 
 
 
-# 6 Conclusiones
+# 7 Conclusiones
 
 El análisis realizado permitió estudiar la relación entre la generación total de electricidad y diferentes características socioeconómicas y energéticas de 140 países durante 2022. En conjunto, el modelo presentó un R² ajustado de 0,9192 y fue estadísticamente significativo (p < 0,0001), lo que indica que las variables incluidas explican una proporción importante de las diferencias observadas en la generación de electricidad entre los países analizados.
 
