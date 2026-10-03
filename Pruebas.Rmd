@@ -1186,6 +1186,7 @@ kable(
 En la tabla se observan diferencias importantes en el consumo de electricidad per cápita entre los continentes. Oceania presenta el promedio más alto, con 9.034,07 kWh per cápita, aunque este resultado debe interpretarse con cautela porque solo incluye dos países. Le siguen Europe con 6.154,70 kWh y Asia con 5.099,65 kWh, mientras que Africa registra el promedio más bajo, con 767,41 kWh per cápita. También se evidencia una alta dispersión dentro de algunos continentes, especialmente en Asia y North America, lo que muestra que existen diferencias considerables entre los países de una misma región. Por su parte, el diagrama de dispersión muestra una tendencia positiva entre el consumo per cápita y la generación total de electricidad, aunque los puntos se encuentran bastante dispersos y existen algunos valores extremos. Por esta razón, la relación deberá evaluarse posteriormente junto con las demás variables del modelo de regresión.
 
 ```{r Grafica de dispersion de consumo de energia, fig.width=10, fig.height=6}
+```{r dispersion-final-corregido}
 
 library(plotly)
 library(dplyr)
@@ -1270,7 +1271,7 @@ fmt_num <- function(x, dec = 2) {
 }
 
 # ============================================================
-# ANOTACIONES (dentro del layout para que los botones las controlen)
+# ANOTACIONES (todas dentro del layout, controlables)
 # ============================================================
 ann_full <- lapply(seq_len(nrow(etiquetas_full)), function(i) {
   list(
@@ -1321,13 +1322,13 @@ n_full    <- length(ann_full)
 n_filt    <- length(ann_filt)
 
 # ============================================================
-# VECTORES DE VISIBILIDAD
+# VECTORES DE VISIBILIDAD PARA LOS TRACES
 # ============================================================
 visible_full <- c(
-  TRUE,  TRUE,           # ribbon_full, trend_full
-  FALSE, FALSE,          # ribbon_filt, trend_filt
-  rep(TRUE,  n_cont),    # markers_full
-  rep(FALSE, n_cont)     # markers_sin
+  TRUE,  TRUE,
+  FALSE, FALSE,
+  rep(TRUE,  n_cont),
+  rep(FALSE, n_cont)
 )
 
 visible_filt <- c(
@@ -1337,8 +1338,26 @@ visible_filt <- c(
   rep(TRUE,  n_cont)
 )
 
-ann_vis_full <- c(rep(TRUE,  n_full), rep(FALSE, n_filt))
-ann_vis_filt <- c(rep(FALSE, n_full), rep(TRUE,  n_filt))
+# ============================================================
+# CLAVES INDEXADAS PARA LAS ANOTACIONES
+# (esto es lo que repara el bug: no se reemplaza el objeto,
+#  solo se actualiza su campo "visible")
+# ============================================================
+# Índices globales de cada grupo
+idx_full <- 0:(n_full - 1)
+idx_filt <- n_full:(n_full + n_filt - 1)
+
+# Botón "todos": mostrar las full, ocultar las filt
+relayout_full_ann <- setNames(
+  as.list(c(rep(TRUE, n_full), rep(FALSE, n_filt))),
+  paste0("annotations[", c(idx_full, idx_filt), "].visible")
+)
+
+# Botón "sin Top 20": ocultar las full, mostrar las filt
+relayout_filt_ann <- setNames(
+  as.list(c(rep(FALSE, n_full), rep(TRUE, n_filt))),
+  paste0("annotations[", c(idx_full, idx_filt), "].visible")
+)
 
 # ============================================================
 # TRACES
@@ -1520,10 +1539,8 @@ fig <- fig %>% layout(
     traceorder = "normal"
   ),
 
-  # Márgenes: más espacio abajo para los botones
   margin = list(t = 130, b = 200, l = 90, r = 190),
 
-  # Anotaciones controlables por botones
   annotations = ann_todas,
 
   updatemenus = list(
@@ -1532,7 +1549,7 @@ fig <- fig %>% layout(
       direction   = "right",
       x           = 0.5,
       xanchor     = "center",
-      y           = -0.32,          # <<< ANTES ERA -0.14, AHORA MÁS ABAJO
+      y           = -0.32,
       yanchor     = "top",
       showactive  = TRUE,
       bgcolor     = "#FBF3DD",
@@ -1552,11 +1569,13 @@ fig <- fig %>% layout(
           method = "update",
           args   = list(
             list(visible = visible_full),
-            list(
-              "title.text"      = paste0(titulo_base, subtitulo_full),
-              "xaxis.autorange" = TRUE,
-              "yaxis.autorange" = TRUE,
-              "annotations"     = lapply(ann_vis_full, function(v) list(visible = v))
+            c(
+              list(
+                "title.text"      = paste0(titulo_base, subtitulo_full),
+                "xaxis.autorange" = TRUE,
+                "yaxis.autorange" = TRUE
+              ),
+              relayout_full_ann
             )
           )
         ),
@@ -1567,11 +1586,13 @@ fig <- fig %>% layout(
           method = "update",
           args   = list(
             list(visible = visible_filt),
-            list(
-              "title.text"      = paste0(titulo_base, subtitulo_filt),
-              "xaxis.autorange" = TRUE,
-              "yaxis.autorange" = TRUE,
-              "annotations"     = lapply(ann_vis_filt, function(v) list(visible = v))
+            c(
+              list(
+                "title.text"      = paste0(titulo_base, subtitulo_filt),
+                "xaxis.autorange" = TRUE,
+                "yaxis.autorange" = TRUE
+              ),
+              relayout_filt_ann
             )
           )
         )
