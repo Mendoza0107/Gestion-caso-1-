@@ -1,0 +1,3266 @@
+---
+title: "Factores Socioeconómicos y Energéticos Asociados a la Generación de Electricidad: Un Análisis de Regresión Lineal Múltiple con Datos de Our World in Data para 2022"
+date: "Santiago Mendoza Buitrago (2515503), Daniela Mosquera Ceballos (2520865), Jose Manuel Toro Rodriguez (2421804), Neyer Andrés Angulo Hurtado (2372140); 5 de Octubre de 2026"
+output: 
+  html_document:
+    theme: lumen
+    highlight: textmate
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    code_folding: show
+---
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  /* Cafés oscuros */
+  --ink:         #1F1206;
+  --dark-brown:  #2E1A0F;
+  --chocolate:   #3E2416;
+  --coffee:      #5C3A21;
+  --walnut:      #6D4C2F;
+  --sienna:      #8B5E34;
+  /* Cálidos tierra */
+  --terracotta:  #A85834;
+  --rust:        #B4653A;
+  --amber:       #C9821B;
+  /* Dorados */
+  --bronze:      #8C6A1F;
+  --ochre:       #B8892E;
+  --gold:        #D4A017;
+  --gold-light:  #E8C766;
+  --gold-pale:   #F0DFA8;
+  /* Neutros cálidos */
+  --parchment:   #F5E6C8;
+  --cream:       #FBF3DD;
+  --marble:      #FAF0DC;
+  --beige:       #E7D3A8;
+  --ink-text:    #2B1810;
+}
+
+/* ============================================================
+   FONDO EXTERIOR
+   ============================================================ */
+html {
+  background: var(--dark-brown) !important;
+  min-height: 100%;
+}
+
+/* ============================================================
+   CUERPO — papel + meandro vertical a los lados
+   ============================================================ */
+body {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  line-height: 1.78 !important;
+  color: var(--ink-text) !important;
+  font-size: 16.5px !important;
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 0 90px !important;
+  background-color: var(--parchment) !important;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='52' viewBox='0 0 26 52'><path d='M22,2 L22,50 L4,50 L4,10 L18,10 L18,40 L8,40 L8,20 L14,20 L14,32 L11,32 L11,24' stroke='%232E1A0F' stroke-width='2.4' fill='none' stroke-linecap='square' stroke-linejoin='miter'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='52' viewBox='0 0 26 52'><path d='M22,2 L22,50 L4,50 L4,10 L18,10 L18,40 L8,40 L8,20 L14,20 L14,32 L11,32 L11,24' stroke='%232E1A0F' stroke-width='2.4' fill='none' stroke-linecap='square' stroke-linejoin='miter'/></svg>"),
+    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
+    linear-gradient(90deg, var(--gold) 0%, var(--gold) 100%),
+    linear-gradient(180deg, var(--parchment) 0%, var(--cream) 100%) !important;
+  background-position:
+    left 28px top 0,
+    right 28px top 0,
+    left 18px top 0,
+    right 18px top 0,
+    left top !important;
+  background-repeat:
+    repeat-y,
+    repeat-y,
+    repeat-y,
+    repeat-y,
+    no-repeat !important;
+  background-size:
+    26px 52px,
+    26px 52px,
+    3px 100%,
+    3px 100%,
+    100% 100% !important;
+  box-shadow:
+    0 0 80px rgba(0,0,0,0.55),
+    inset 0 0 60px rgba(140,106,31,0.10) !important;
+  min-height: 100vh !important;
+}
+
+/* ============================================================
+   CONTENEDOR INTERNO
+   ============================================================ */
+.main-container,
+.container-fluid {
+  padding: 0 20px 3rem 20px !important;
+  max-width: 100% !important;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header {
+  margin: 0 -20px 3rem -20px !important;
+  padding: 3.5rem 2rem 3rem 2rem !important;
+  background:
+    linear-gradient(135deg, #2E1A0F 0%, #5C3A21 35%, #8B5E34 55%, #8C6A1F 100%) !important;
+  color: var(--parchment) !important;
+  text-align: center !important;
+  border-top: 5px solid var(--gold) !important;
+  border-bottom: 5px solid var(--gold) !important;
+  box-shadow:
+    inset 0 0 60px rgba(0,0,0,0.45),
+    0 8px 30px rgba(0,0,0,0.35) !important;
+  position: relative !important;
+}
+
+#header::before,
+#header::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 22px !important;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'><path d='M2,20 L2,4 L20,4 L20,18 L6,18 L6,8 L16,8 L16,14 L10,14 L10,11' stroke='%23D4A017' stroke-width='1.8' fill='none' stroke-linecap='square'/></svg>") !important;
+  background-repeat: repeat-x !important;
+  background-size: 44px 22px !important;
+  opacity: 0.85 !important;
+}
+#header::before { top: 6px !important; }
+#header::after  { bottom: 6px !important; }
+
+#header .title {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: var(--gold-pale) !important;
+  font-size: 2.25rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  margin: 1rem 0 1.2rem 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  text-shadow: 0 1px 0 #000, 2px 2px 12px rgba(0,0,0,0.6) !important;
+  line-height: 1.28 !important;
+}
+#header .subtitle {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-style: italic !important;
+  color: var(--gold-pale) !important;
+  font-size: 1.15rem !important;
+  font-weight: 400 !important;
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+  margin: 0.5rem 0 !important;
+  opacity: 0.95;
+}
+#header .author, #header .date {
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  color: var(--gold-light) !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 2px !important;
+  margin: 0.2rem 0 !important;
+}
+
+#header h1, #header h2, #header h3, #header h4 { color: var(--gold-pale) !important; }
+#header h1::before, #header h1::after { content: "" !important; }
+
+/* ============================================================
+   ENCABEZADOS
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', Georgia, serif !important;
+  color: var(--chocolate) !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1rem !important;
+  border-bottom: none !important;
+  font-weight: 600 !important;
+}
+h1 {
+  font-size: 2.3rem !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+  color: var(--chocolate) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 1rem !important;
+  border-bottom: 4px double var(--gold) !important;
+  position: relative;
+}
+h1::before { content: "❖ " !important; color: var(--ochre) !important; }
+h1::after  { content: " ❖" !important; color: var(--ochre) !important; }
+
+h2 {
+  font-size: 1.75rem !important;
+  color: var(--dark-brown) !important;
+  border-left: 6px solid var(--terracotta) !important;
+  padding: 0.5rem 0 0.5rem 1.2rem !important;
+  background: linear-gradient(90deg, rgba(168,88,52,0.16), transparent) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.2px !important;
+  margin-top: 3rem !important;
+}
+h3 {
+  font-size: 1.42rem !important;
+  color: var(--terracotta) !important;
+  border-bottom: 2px solid var(--beige) !important;
+  padding-bottom: 0.5rem !important;
+  font-style: italic !important;
+}
+h4 { font-size: 1.22rem !important; color: var(--rust) !important; }
+h5 { font-size: 1.08rem !important; color: var(--walnut) !important; text-transform: uppercase !important; letter-spacing: 1px !important; }
+h6 { font-size: 1rem !important; color: var(--bronze) !important; font-style: italic !important; }
+
+/* ============================================================
+   TEXTO
+   ============================================================ */
+p { text-align: justify !important; hyphens: auto; margin-bottom: 1.1rem !important; }
+
+/* ============================================================
+   TOC ESTÁTICO (no flotante) — aparece al inicio del documento
+   ============================================================ */
+
+/* Contenedor principal */
+#TOC {
+  position: static !important;
+  background: linear-gradient(135deg, var(--cream), var(--parchment)) !important;
+  border: 2px solid var(--dark-brown) !important;
+  border-top: 6px double var(--gold) !important;
+  border-bottom: 6px double var(--gold) !important;
+  padding: 2rem 2.5rem 2rem 2.5rem !important;
+  margin: 2.5rem 0 3.5rem 0 !important;
+  box-shadow: 0 6px 28px rgba(46, 26, 15, 0.22) !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  float: none !important;
+  clear: both !important;
+}
+
+/* Título decorativo del TOC */
+#TOC::before {
+  content: "❖ Índice de Contenidos ❖";
+  display: block;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--chocolate);
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 3px double var(--gold);
+  text-align: center;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Lista de primer nivel */
+#TOC > ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+  columns: 2;
+  column-gap: 2.5rem;
+}
+
+/* En pantallas pequeñas, una sola columna */
+@media (max-width: 800px) {
+  #TOC > ul { columns: 1; }
+}
+
+/* Elementos */
+#TOC li {
+  margin: 0.35rem 0 !important;
+  break-inside: avoid;
+}
+
+/* Enlaces de primer nivel */
+#TOC > ul > li > a {
+  color: var(--dark-brown) !important;
+  text-decoration: none !important;
+  font-family: 'Cinzel', Georgia, serif !important;
+  font-size: 0.98rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  padding: 0.5rem 0.9rem !important;
+  display: block !important;
+  border-left: 4px solid transparent;
+  border-bottom: 1px solid var(--beige);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+#TOC > ul > li > a:hover {
+  color: var(--terracotta) !important;
+  background: rgba(212, 160, 23, 0.16) !important;
+  border-left-color: var(--gold);
+  padding-left: 1.2rem !important;
+}
+
+/* Subniveles (nivel 2 y 3) */
+#TOC ul ul {
+  list-style: none !important;
+  padding-left: 1.4rem !important;
+  margin: 0.3rem 0 0.6rem 0 !important;
+}
+
+#TOC ul ul a {
+  color: var(--walnut) !important;
+  text-decoration: none !important;
+  font-family: 'EB Garamond', Georgia, serif !important;
+  font-size: 0.92rem !important;
+  font-style: italic !important;
+  padding: 0.28rem 0.7rem !important;
+  display: block !important;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+  text-transform: none;
+}
+
+#TOC ul ul a:hover {
+  color: var(--terracotta) !important;
+  background: rgba(212, 160, 23, 0.12) !important;
+  border-left-color: var(--ochre);
+  padding-left: 1rem !important;
+}
+
+/* Nivel 3 (sub-subniveles) */
+#TOC ul ul ul {
+  padding-left: 1.4rem !important;
+}
+#TOC ul ul ul a {
+  font-size: 0.86rem !important;
+  color: var(--bronze) !important;
+  font-style: normal !important;
+}
+
+/* ============================================================
+   CÓDIGO
+   ============================================================ */
+pre, code { font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important; }
+pre.sourceCode, pre {
+  background: var(--marble) !important;
+  color: var(--ink-text) !important;
+  padding: 15px !important;
+  border: 1px solid var(--beige) !important;
+  border-left: 5px solid var(--walnut) !important;
+  overflow-x: auto !important;
+  margin: 15px 0 !important;
+  font-size: 0.88em !important;
+  box-shadow: inset 0 0 20px rgba(140,106,31,0.06), 0 2px 8px rgba(46,26,15,0.10) !important;
+}
+pre code { background: transparent !important; padding: 0 !important; border: none !important; color: var(--ink-text) !important; }
+code:not(pre code) {
+  background: var(--beige) !important;
+  color: var(--chocolate) !important;
+  padding: 0.1rem 0.4rem !important;
+  border-radius: 3px !important;
+  font-size: 0.9em !important;
+}
+
+/* ============================================================
+   TABLAS
+   ============================================================ */
+table {
+  font-family: 'EB Garamond', Georgia, serif !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 1.5rem 0 !important;
+  background: var(--parchment) !important;
+  border: 2px solid var(--dark-brown) !important;
+  border-top: 6px double var(--gold) !important;
+  border-bottom: 6px double var(--gold) !important;
+  box-shadow: 0 6px 24px rgba(46,26,15,0.15) !important;
+}
+table thead th {
+  font-family: 'Cinzel', Georgia, serif !important;
+  background: linear-gradient(135deg, var(--chocolate), var(--dark-brown)) !important;
+  color: var(--gold-pale) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 0.85rem 1rem !important;
+  text-align: center !important;
+  border: none !important;
+  border-bottom: 3px solid var(--gold) !important;
+}
+table td {
+  padding: 0.7rem 1rem !important;
+  border-bottom: 1px solid var(--beige) !important;
+  vertical-align: top !important;
+}
+table tbody tr:hover { background: rgba(212,160,23,0.12) !important; }
+table tbody tr:nth-child(even) { background: rgba(231,211,168,0.35) !important; }
+
+/* ============================================================
+   BLOCKQUOTE
+   ============================================================ */
+blockquote {
+  background: linear-gradient(135deg, rgba(140,106,31,0.12), var(--parchment)) !important;
+  border-left: 6px solid var(--bronze) !important;
+  border-top: 1px solid var(--gold) !important;
+  border-bottom: 1px solid var(--gold) !important;
+  padding: 1.2rem 1.8rem !important;
+  margin: 1.8rem 0 !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 1.12rem !important;
+  font-style: italic !important;
+  color: var(--chocolate) !important;
+}
+
+/* ============================================================
+   FIGURAS
+   ============================================================ */
+.figure img {
+  box-shadow: 0 4px 16px rgba(46,26,15,0.20) !important;
+  border: 1px solid var(--beige) !important;
+  background: var(--cream) !important;
+  padding: 4px !important;
+}
+p.caption, .caption {
+  color: var(--walnut) !important;
+  font-style: italic !important;
+  border-left: 3px solid var(--gold) !important;
+  padding-left: 0.8rem !important;
+  text-align: left !important;
+  margin-top: 0.5rem !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  body {
+    padding: 0 65px !important;
+    background-size: 22px 44px, 22px 44px, 3px 100%, 3px 100%, 100% 100% !important;
+    background-position: left 20px top 0, right 20px top 0, left 14px top 0, right 14px top 0, left top !important;
+  }
+  #header .title { font-size: 1.5rem !important; letter-spacing: 1px !important; }
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.35rem !important; }
+  #TOC { padding: 1.5rem 1.5rem !important; }
+  #TOC::before { font-size: 1.1rem !important; }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 0 1rem !important;
+    background-image: linear-gradient(180deg, var(--parchment) 0%, var(--cream) 100%) !important;
+  }
+  #header { margin: 0 -1rem 2rem -1rem !important; padding: 2rem 1rem !important; }
+  #header::before, #header::after { height: 14px !important; background-size: 28px 14px !important; }
+  #header .title { font-size: 1.25rem !important; }
+  h1 { font-size: 1.5rem !important; }
+  #TOC { padding: 1.2rem 1rem !important; }
+  #TOC > ul { columns: 1; }
+}
+</style>
+
+# Introducción
+
+La energía es un recurso fundamental para el desarrollo y funcionamiento de los países, ya que está presente en las actividades económicas, industriales y sociales que se realizan diariamente. Sin embargo, la cantidad de energía que genera cada país no es la misma y puede estar relacionada con diferentes características de su población y de su economía. Factores como el número de habitantes, el Producto Interno Bruto (PIB), el porcentaje de población que vive en zonas urbanas y el acceso a la electricidad pueden tener relación con la cantidad de energía generada.
+
+A partir de esto, surge la siguiente pregunta de investigación: ¿qué relación existe entre la generación total de energía y factores como la población, el PIB, la población urbana y el acceso a la electricidad en los diferentes países durante el año 2022?
+
+Para responder esta pregunta, se analizarán los datos correspondientes a diferentes países durante el año 2022, tomando como variable principal la generación total de energía y relacionándola con variables demográficas, económicas y sociales. De esta manera, se busca conocer si las diferencias en estas características están relacionadas con las diferencias en la cantidad de energía generada por cada país.
+
+El objetivo de este estudio es analizar la relación entre la generación total de energía de los países en 2022 y variables como la población total, el PIB, el porcentaje de población urbana y el acceso a la electricidad, con el fin de identificar cuáles de estos factores presentan una mayor relación con la generación de energía.
+
+Así, el estudio permitirá tener una visión más clara de cómo las características de los países pueden estar relacionadas con su capacidad de generación de energía y de qué manera los aspectos económicos, demográficos y sociales se relacionan entre sí.
+
+
+
+# Fuente y construcción de la base.
+
+Para el desarrollo del estudio se construyó una base de datos a partir de información pública proveniente de Our World in Data (OWID) y el Banco Mundial, seleccionando los registros correspondientes al año 2022. La unidad de análisis es el país, por lo que cada fila de la base representa un país con información disponible para las variables consideradas en el estudio.
+
+La generación total de electricidad, medida en teravatios-hora (TWh), se obtuvo de Electricity Mix de Our World in Data. La población total se obtuvo del Population & Demography Data Explorer de la misma plataforma, mientras que la clasificación por continente se tomó de World regions according to Our World in Data. Esta última fuente corresponde a las regiones definidas por OWID y utilizadas en sus gráficos y mapas.
+
+Por otra parte, el PIB total, expresado en dólares estadounidenses a precios actuales, y el consumo de energía eléctrica per cápita, expresado en kWh por habitante, fueron obtenidos del Banco Mundial. Finalmente, el acceso a electricidad, medido como el porcentaje de la población con acceso al servicio eléctrico, se obtuvo de la sección Access to Energy de Our World in Data.
+
+Debido a que las variables se encontraban distribuidas en diferentes conjuntos de datos, fue necesario realizar un proceso de integración. Para ello, las bases fueron organizadas utilizando el código de país como identificador común, lo que permitió relacionar correctamente la información de generación, población, PIB, consumo de electricidad per cápita, acceso a electricidad y continente para cada país.
+
+Posteriormente, se realizó la depuración de los datos. Se revisaron posibles registros duplicados, valores faltantes y la correcta codificación de las variables. En el caso del consumo de electricidad per cápita se identificaron 49 observaciones sin información disponible, las cuales fueron reconocidas como valores faltantes. Para garantizar que todas las observaciones utilizadas en el análisis contaran con información completa en las variables seleccionadas, se trabajó únicamente con casos completos.
+
+Después del proceso de integración, revisión y depuración, la base final quedó conformada por 140 países, con información completa para las variables incluidas en el estudio. Esta base fue utilizada posteriormente para realizar el análisis descriptivo y estimar el modelo de regresión lineal múltiple.
+
+
+# Metodología 
+
+
+El estudio se desarrolló mediante un enfoque cuantitativo de corte transversal, utilizando información correspondiente a 140 países durante el año 2022. Para analizar la relación entre la generación total de electricidad y diferentes características socioeconómicas y energéticas, se empleó un modelo de regresión lineal múltiple estimado mediante Mínimos Cuadrados Ordinarios (MCO). La variable dependiente fue la generación total de electricidad, expresada en teravatios-hora (TWh), mientras que como variables explicativas se incluyeron la población total, el PIB total, el consumo de electricidad per cápita, el acceso a electricidad y el continente. Estas variables fueron seleccionadas por su relación conceptual con el fenómeno estudiado: la población representa la dimensión demográfica de cada país, el PIB refleja el tamaño de su economía, el consumo per cápita representa la intensidad del uso de electricidad, el acceso a electricidad refleja la cobertura del servicio y el continente permite considerar diferencias geográficas entre los países.
+
+El modelo planteado se expresa como:
+
+$$Gen Elect = \beta_0 + \beta_1(Pob) + \beta_2(PIB) + \beta_3(Cons EelectPerCapital) + \beta_4(Continente) + \beta_5(Acceso Elect) + \epsilon $$
+
+En esta expresión, \(\beta_0\) corresponde al intercepto; \(\beta_1,\beta_2,\beta_3\) y \(\beta_4\) representan los coeficientes asociados a las variables cuantitativas; \(D_{ji}\) corresponde a las variables indicadoras utilizadas para representar el continente; \(\gamma_j\) representa sus respectivos coeficientes; y \(\varepsilon_i\) corresponde al término de error, que recoge aquellos factores relacionados con la generación eléctrica que no fueron incluidos en el modelo. Debido a que el continente es una variable categórica nominal con seis categorías, se incorporó mediante cinco variables indicadoras, utilizando África como categoría de referencia. Por esta razón, los coeficientes de Asia, Europa, América del Norte, Oceanía y América del Sur representan diferencias con respecto a África, manteniendo constantes las demás variables.
+
+Los coeficientes fueron estimados mediante MCO, método que busca minimizar la suma de los cuadrados de las diferencias entre los valores observados y los estimados por el modelo. Cada coeficiente cuantitativo representa el cambio esperado en la generación total de electricidad asociado con un aumento de una unidad en la variable correspondiente, manteniendo constantes las demás variables. Para evaluar los resultados se analizaron los coeficientes estimados, errores estándar, estadísticos t y valores p, además del R² ajustado y la prueba F para evaluar el comportamiento global del modelo. Finalmente, se realizaron diagnósticos de linealidad, normalidad de los residuos, homocedasticidad y multicolinealidad mediante VIF/GVIF, con el propósito de verificar el cumplimiento de los principales supuestos de la regresión lineal y considerar sus posibles limitaciones al momento de interpretar los resultados.
+
+
+
+## Descricpión del modelo
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+
+library(readxl)
+library(tidyverse)
+library(knitr)
+library(plotly)
+```
+
+El modelo será estimado mediante Mínimos Cuadrados Ordinarios (MCO), utilizando una muestra de 140 países con información correspondiente al año 2022, obtenida de Our World in Data. La generación total de electricidad será la variable dependiente y se analizará su relación con factores socioeconómicos y energéticos como la población, el PIB, el consumo de electricidad per cápita, el acceso a electricidad y el continente.
+
+```{r Tabla modelo}
+Tabla_modelo <- data.frame(
+  Variable = c(
+    "Generacion", "β₀", "Poblacion", "PIB",
+    "Consumo", "Acceso", "Continente", "ε"
+  ),
+  
+  Descripcion = c(
+    "Generación total de electricidad del país",
+    "Intercepto del modelo",
+    "Población total del país",
+    "Producto Interno Bruto total del país",
+    "Consumo de electricidad per cápita",
+    "Población con acceso a electricidad",
+    "Continente al que pertenece el país",
+    "Término de error aleatorio"
+  ),
+  
+  Tipo = c(
+    "Dependiente - cuantitativa continua",
+    "Parámetro",
+    "Cuantitativa",
+    "Cuantitativa continua",
+    "Cuantitativa continua",
+    "Cuantitativa continua",
+    "Categórica nominal",
+    "Error"
+  ),
+  
+  Unidad_Notas = c(
+    "TWh",
+    "Intercepto",
+    "Habitantes",
+    "USD",
+    "kWh per cápita",
+    "%",
+    "Categoría de referencia",
+    "Factores no observados"
+  )
+)
+
+knitr::kable(
+  Tabla_modelo,
+  format = "html",
+  col.names = c(
+    "Variable",
+    "Descripción",
+    "Tipo de variable",
+    "Unidad / Notas"
+  ),
+  caption = "Tabla de Variables del Modelo de Regresión",
+  escape = FALSE
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_modelo), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+##  Base de datos del estudio
+
+Para este estudio se utiliza una base de datos construida a partir de información de Our World in Data para el año 2022. La base final está conformada por 140 países y reúne las variables seleccionadas para el modelo: generación total de electricidad, población, PIB total, consumo de electricidad per cápita, acceso a electricidad y continente. La información fue integrada mediante el código de cada país y posteriormente depurada para trabajar únicamente con observaciones completas y consistentes.
+
+```{r Base de datos}
+# LIBRERÍAS
+library(readxl)
+library(tidyverse)
+
+
+# 1. GENERACIÓN DE ELECTRICIDAD
+gen <- read.csv("Generacion de electricidad.csv", sep = ",") %>% 
+  rename(
+    Codigo = 2,
+    Generacion = 4
+  ) %>% 
+  select(Codigo, Generacion)
+
+
+# 2. POBLACIÓN
+pob <- read.csv("Poblacion cada pais.csv", sep = ",") %>% 
+  rename(
+    Codigo = 2,
+    Poblacion = 4
+  ) %>% 
+  select(Codigo, Poblacion)
+
+
+# 3. CONTINENTE
+cont <- read.csv("Continente de cada pais.csv", sep = ",") %>% 
+  rename(
+    Codigo = 2,
+    Continente = 4
+  ) %>% 
+  select(Codigo, Continente)
+
+
+# 4. CONSUMO DE ELECTRICIDAD PER CÁPITA
+cons <- read.csv("Cons energ per capita.xlsx - Data.csv") %>% 
+  select(Country.Code, X2022) %>% 
+  rename(
+    Codigo = Country.Code,
+    Consumo = X2022
+  )
+
+
+# 5. PIB TOTAL
+pib <- read.csv("PIB total de cada pais.csv", sep = ",") %>% 
+  rename(
+    Codigo = 2,
+    PIB = 4
+  ) %>% 
+  select(Codigo, PIB)
+
+
+# 6. ACCESO A ELECTRICIDAD
+acc <- read.csv("Acceso a electricidad de cada pais.csv", sep = ",") %>% 
+  rename(
+    Codigo = 2,
+    Acceso = 4
+  ) %>% 
+  select(Codigo, Acceso)
+
+
+# 7. UNIÓN DE TODAS LAS BASES
+Base_datos <- gen %>% 
+  inner_join(pob, by = "Codigo") %>% 
+  inner_join(cont, by = "Codigo") %>% 
+  inner_join(cons, by = "Codigo") %>% 
+  inner_join(pib, by = "Codigo") %>% 
+  inner_join(acc, by = "Codigo") %>% filter(Codigo != "ISL") 
+
+
+# 8. LIMPIEZA DE LA VARIABLE CONSUMO
+Base_datos$Consumo[Base_datos$Consumo == ""] <- NA
+
+Base_datos$Consumo <- as.numeric(
+  gsub(",", ".", Base_datos$Consumo)
+)
+
+
+# 9. ELIMINACIÓN DE DATOS FALTANTES
+Base_datos <- Base_datos %>% 
+  drop_na()
+
+
+library(gt)
+
+Base_datos %>%
+  gt() %>%
+  
+  # ---------- Encabezado ----------
+  tab_header(
+    title    = "Base de Datos – Indicadores Energéticos 2022",
+    subtitle = "140 países  |  Fuente: Our World in Data y Banco Mundial"
+  ) %>%
+  
+  # ---------- Nombres de columnas en español ----------
+  cols_label(
+    Codigo     = "Código",
+    Generacion = "Generación (TWh)",
+    Poblacion  = "Población",
+    Continente = "Continente",
+    Consumo    = "Consumo (kWh per cápita)",
+    PIB        = "PIB total (USD)",
+    Acceso     = "Acceso a electricidad"
+  ) %>%
+  
+  # ---------- Formato de números ----------
+  fmt_number(
+    columns  = c(Generacion, Consumo),
+    decimals = 2,
+    sep_mark = ",",
+    dec_mark = "."
+  ) %>%
+  fmt_integer(
+    columns  = Poblacion,
+    sep_mark = ","
+  ) %>%
+  fmt_currency(
+    columns  = PIB,
+    currency = "USD",
+    decimals = 0,
+    sep_mark = ","
+  ) %>%
+  fmt_number(
+    columns  = Acceso,
+    decimals = 2,
+    pattern  = "{x} %"
+  ) %>%
+  
+  # ---------- Alineación ----------
+  cols_align(
+    align   = "center",
+    columns = c(Codigo, Continente)
+  ) %>%
+  cols_align(
+    align   = "right",
+    columns = c(Generacion, Poblacion, Consumo, PIB, Acceso)
+  ) %>%
+  
+  # ---------- Ancho de columnas ----------
+  cols_width(
+    Codigo     ~ px(80),
+    Generacion ~ px(130),
+    Poblacion  ~ px(120),
+    Continente ~ px(130),
+    Consumo    ~ px(170),
+    PIB        ~ px(140),
+    Acceso     ~ px(150)
+  ) %>%
+  
+  # ---------- Estilo del título ----------
+  tab_style(
+    style = list(
+      cell_fill(color = "#2E1A0F"),
+      cell_text(
+        color    = "#F0DFA8",
+        weight   = "bold",
+        size     = px(20),
+        align    = "center",
+        font     = "Cinzel"
+      )
+    ),
+    locations = cells_title(groups = "title")
+  ) %>%
+  tab_style(
+    style = list(
+      cell_fill(color = "#2E1A0F"),
+      cell_text(
+        color    = "#E8C766",
+        style    = "italic",
+        size     = px(14),
+        align    = "center"
+      )
+    ),
+    locations = cells_title(groups = "subtitle")
+  ) %>%
+  
+  # ---------- Estilo de encabezado de columnas ----------
+  tab_style(
+    style = list(
+      cell_fill(color = "#3E2416"),
+      cell_text(
+        color    = "#F0DFA8",
+        weight   = "bold",
+        size     = px(12),
+        font     = "Cinzel",
+        align    = "center"
+      )
+    ),
+    locations = cells_column_labels()
+  ) %>%
+  
+  # ---------- Colores por continente en la columna Continente ----------
+  tab_style(
+    style = list(
+      cell_text(color = "#A85834", weight = "bold")
+    ),
+    locations = cells_body(columns = Continente)
+  ) %>%
+  
+  # ---------- Filas alternas (zebra suave) ----------
+  tab_style(
+    style = cell_fill(color = "#FBF3DD"),
+    locations = cells_body(rows = seq(1, nrow(Base_datos), by = 2))
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#F5E6C8"),
+    locations = cells_body(rows = seq(2, nrow(Base_datos), by = 2))
+  ) %>%
+  
+  # ---------- Nota al pie ----------
+  tab_source_note(
+    source_note = "Elaboración propia con base en Our World in Data (2022) y el Banco Mundial."
+  ) %>%
+  tab_style(
+    style = list(
+      cell_text(color = "#8B5E34", style = "italic", size = px(11), align = "left")
+    ),
+    locations = cells_source_notes()
+  ) %>%
+  
+  # ---------- Opciones globales de la tabla ----------
+  tab_options(
+    table.background.color            = "#F5E6C8",
+    table.font.names                  = "EB Garamond",
+    table.font.color                  = "#2B1810",
+    table.font.size                   = px(13.5),
+    
+    table.border.top.color            = "#D4A017",
+    table.border.top.width            = px(3),
+    table.border.bottom.color         = "#D4A017",
+    table.border.bottom.width         = px(3),
+    
+    heading.border.bottom.color       = "#D4A017",
+    heading.border.bottom.width       = px(2),
+    
+    column_labels.border.bottom.color = "#D4A017",
+    column_labels.border.bottom.width = px(2),
+    
+    row.striping.include_table_body   = FALSE
+  ) %>%
+  
+  # ---------- Interactividad ----------
+  opt_interactive(
+    use_search           = TRUE,
+    use_pagination       = TRUE,
+    use_page_size_select = TRUE,
+    use_highlight        = TRUE,
+    use_compact_mode     = TRUE,
+    page_size_default    = 15,
+    page_size_values     = c(10, 15, 25, 50, 100)
+  )
+```
+
+# 4 Resultados descriptivos
+
+## Análisis Univariado de las variables del Modelo
+
+### Generación de electricidad 
+
+En la Tabla 1 se presentan las estadísticas descriptivas de la generación de electricidad de los países incluidos en el estudio, agrupadas por continente. Los resultados muestran diferencias importantes tanto en el nivel promedio de generación como en su dispersión, lo que permite observar que la producción de electricidad no se distribuye de manera uniforme entre los países analizados.
+
+```{r Tabla generacion electricidad}
+Tabla_generacion <- Base_datos %>%
+  group_by(Continente) %>%
+  summarise(
+    N = n(),
+    Promedio = mean(Generacion),
+    Desv_Estandar = sd(Generacion),
+    Minimo = min(Generacion),
+    Maximo = max(Generacion)
+  )
+
+kable(
+  Tabla_generacion,
+  format = "html",
+  digits = 2,
+  col.names = c(
+    "Continente",
+    "N",
+    "Generación promedio (TWh)",
+    "Desv. Estándar",
+    "Mínimo",
+    "Máximo"
+  ),
+  caption = "Tabla 1: Estadísticas descriptivas de la generación de electricidad por continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_generacion), by = 2),
+    background = "#F5E6C8"
+  )
+```
+Los resultados muestran diferencias importantes en la generación de electricidad entre los países analizados. North America presenta el promedio más alto con 414,52 TWh, seguido de Asia con 388,42 TWh, mientras que África registra el promedio más bajo con 25,81 TWh. Además, se observa una alta dispersión entre países, especialmente en Asia y North America, donde algunos presentan niveles de generación considerablemente superiores al resto. Esto muestra que, incluso dentro de un mismo continente, la generación de electricidad puede variar ampliamente. En el caso de Oceania, los resultados deben interpretarse con cautela debido a que solo se incluyen dos países.
+
+
+```{r mapa-generacion-completo, fig.height=7, fig.width=12}
+
+# ============================================================
+# LIBRERÍAS
+# ============================================================
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(leaflet)
+library(dplyr)
+library(htmltools)
+library(htmlwidgets)
+
+# ============================================================
+# PALETA (cafés, dorados, pergamino)
+# ============================================================
+paleta_generacion <- c(
+  "#FAF0DC",   # casi blanco pergamino
+  "#F0DFA8",   # dorado pálido
+  "#E8C766",   # dorado claro
+  "#D4A017",   # dorado
+  "#C9821B",   # ámbar
+  "#A85834",   # terracota
+  "#5C3A21",   # café
+  "#2E1A0F"    # café oscuro
+)
+
+# ============================================================
+# SHAPEFILE MUNDIAL
+# ============================================================
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# ============================================================
+# UNIÓN POR CÓDIGO ISO-3
+# ============================================================
+world_data <- world %>%
+  left_join(
+    Base_datos %>% select(Codigo, Generacion, Continente),
+    by = c("iso_a3" = "Codigo")
+  )
+
+# ============================================================
+# FORMATEO DE NÚMEROS
+# ============================================================
+formato_num <- function(x, decimales = 2) {
+  ifelse(
+    is.na(x),
+    "Sin datos",
+    format(round(x, decimales), big.mark = ",", scientific = FALSE, trim = TRUE)
+  )
+}
+
+# ============================================================
+# PALETA NUMÉRICA
+# ============================================================
+pal_gen <- colorNumeric(
+  palette  = colorRampPalette(paleta_generacion)(100),
+  domain   = world_data$Generacion,
+  na.color = "#E7D3A8"
+)
+
+# ============================================================
+# LABELS (hover)
+# ============================================================
+labels <- sprintf(
+  "<div style='font-family: EB Garamond, Georgia, serif; color: #2B1810;'>
+     <strong style='color: #3E2416; font-family: Cinzel, serif; font-size: 15px; letter-spacing: 0.5px;'>%s</strong><br/>
+     <span style='color: #8B5E34; font-size: 12px; font-style: italic;'>Generación de electricidad:</span><br/>
+     <strong style='color: #A85834; font-size: 14px;'>%s</strong>
+   </div>",
+  world_data$name,
+  paste0(formato_num(world_data$Generacion), " TWh")
+) %>% lapply(HTML)
+
+# ============================================================
+# MAPA
+# ============================================================
+mapa <- leaflet(
+  world_data,
+  width  = "100%",
+  height = "600px",
+  options = leafletOptions(
+    minZoom       = 2,
+    maxZoom       = 6,
+    worldCopyJump = TRUE
+  )
+) %>%
+  setView(lng = 10, lat = 18, zoom = 2) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    fillColor   = ~pal_gen(world_data$Generacion),
+    weight      = 1,
+    opacity     = 0.85,
+    color       = "#5C3A21",
+    fillOpacity = 0.88,
+    highlight = highlightOptions(
+      weight       = 2.5,
+      color        = "#D4A017",
+      fillOpacity  = 0.95,
+      bringToFront = TRUE
+    ),
+    label        = labels,
+    labelOptions = labelOptions(
+      style = list(
+        "background"    = "#FBF3DD",
+        "border"        = "2px solid #D4A017",
+        "border-radius" = "6px",
+        "padding"       = "10px 12px",
+        "box-shadow"    = "0 4px 18px rgba(140, 106, 31, 0.45)"
+      ),
+      textsize = "13px"
+    )
+  ) %>%
+  addLegend(
+    position  = "bottomright",
+    pal       = pal_gen,
+    values    = ~Generacion,
+    title     = paste0(
+      "<div style='font-family: Cinzel, Georgia, serif; color: #3E2416; ",
+      "font-weight: 700; font-size: 12px; letter-spacing: 1.2px; ",
+      "text-transform: uppercase; text-align: center; margin-bottom: 4px;'>",
+      "GENERACIÓN DE ELECTRICIDAD</div>",
+      "<div style='font-family: EB Garamond, serif; color: #8B5E34; ",
+      "font-style: italic; font-size: 11px; text-align: center; ",
+      "margin-bottom: 8px;'>Teravatios-hora (TWh)</div>"
+    ),
+    labFormat = labelFormat(
+      suffix   = " TWh",
+      digits   = 1,
+      big.mark = ","
+    ),
+    opacity  = 1,
+    na.label = "Sin datos"
+  )
+
+# ============================================================
+# ESTILO DEL MAPA Y LA LEYENDA (CSS + JS)
+# ============================================================
+mapa <- mapa %>%
+  htmlwidgets::onRender("
+    function(el, x) {
+
+      var container = el.querySelector('.leaflet-container');
+      if (container) {
+        container.style.background   = '#FBF3DD';
+        container.style.border       = '3px solid #D4A017';
+        container.style.borderRadius = '8px';
+        container.style.boxShadow    = '0 8px 28px rgba(46,26,15,0.35)';
+      }
+
+      setTimeout(function() {
+        var legend = document.querySelector('.leaflet-control.legend.leaflet-control');
+        if (legend) {
+          legend.style.background   = 'linear-gradient(135deg, #FBF3DD, #F5E6C8)';
+          legend.style.border       = '2px solid #D4A017';
+          legend.style.borderRadius = '8px';
+          legend.style.padding      = '14px 16px';
+          legend.style.boxShadow    = '0 6px 24px rgba(46,26,15,0.35)';
+          legend.style.fontFamily   = 'EB Garamond, Georgia, serif';
+          legend.style.color        = '#2B1810';
+
+          var items = legend.querySelectorAll('.legend i');
+          items.forEach(function(item) {
+            item.style.borderRadius = '3px';
+            item.style.border       = '1px solid #8C6A1F';
+            item.style.boxShadow    = 'inset 0 0 4px rgba(46,26,15,0.25)';
+            item.style.width        = '22px';
+            item.style.height       = '14px';
+            item.style.marginRight  = '8px';
+          });
+
+          var divs = legend.querySelectorAll('div');
+          divs.forEach(function(d) {
+            if (!d.style.color || d.style.color === '') {
+              d.style.color      = '#2B1810';
+              d.style.fontFamily = 'EB Garamond, Georgia, serif';
+              d.style.fontSize   = '11px';
+            }
+          });
+        }
+
+        var attr = document.querySelector('.leaflet-control-attribution');
+        if (attr) {
+          attr.style.background = 'rgba(251, 243, 221, 0.85)';
+          attr.style.color      = '#5C3A21';
+          attr.style.fontFamily = 'EB Garamond, serif';
+          attr.style.fontSize   = '10px';
+        }
+
+        var zoomIn  = document.querySelector('.leaflet-control-zoom-in');
+        var zoomOut = document.querySelector('.leaflet-control-zoom-out');
+        [zoomIn, zoomOut].forEach(function(btn) {
+          if (btn) {
+            btn.style.background = '#FBF3DD';
+            btn.style.color      = '#5C3A21';
+            btn.style.border     = '2px solid #D4A017';
+            btn.style.fontWeight = 'bold';
+          }
+        });
+      }, 150);
+    }
+  ")
+
+# ============================================================
+# TÍTULO + MAPA
+# ============================================================
+htmltools::tagList(
+  htmltools::HTML(
+    '<div style="
+       text-align: center;
+       color: #3E2416;
+       font-family: Cinzel, Georgia, serif;
+       font-size: 20px;
+       font-weight: 700;
+       letter-spacing: 2px;
+       text-transform: uppercase;
+       margin: 1.5rem 0 1rem 0;
+       padding-bottom: 0.6rem;
+       border-bottom: 3px double #D4A017;
+     ">
+       ❖ Distribución Geoespacial de la Generación de Electricidad 2022 ❖
+       <div style=\"font-family: EB Garamond, serif; font-style: italic;
+                   font-size: 13px; color: #8B5E34;
+                   letter-spacing: normal; text-transform: none;
+                   margin-top: 0.4rem;\">
+         Teravatios-hora (TWh) por país | Fuente: Our World in Data, 2022
+       </div>
+     </div>'
+  ),
+  mapa
+)
+```
+
+
+## Variables Explicativas Cuantitativas
+
+### Consumo de energía per capitá
+
+El consumo de electricidad per cápita representa la cantidad de electricidad consumida por habitante, expresada en kWh per cápita. En la tabla se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados según el continente al que pertenecen.
+
+```{r Tabla consumo energia percapita}
+Tabla_consumo <- Base_datos %>%
+  group_by(Continente) %>%
+  summarise(
+    N = n(),
+    Promedio = mean(Consumo),
+    Desv_Estandar = sd(Consumo),
+    Minimo = min(Consumo),
+    Maximo = max(Consumo)
+  )
+
+kable(
+  Tabla_consumo,
+  format = "html",
+  digits = 2,
+  col.names = c(
+    "Continente",
+    "N",
+    "Consumo promedio",
+    "Desv. Estándar",
+    "Mínimo",
+    "Máximo"
+  ),
+  caption = "Tabla 2: Estadísticas descriptivas del consumo de electricidad per cápita por continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_consumo), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+
+En la tabla se observan diferencias importantes en el consumo de electricidad per cápita entre los continentes. Oceania presenta el promedio más alto, con 9.034,07 kWh per cápita, aunque este resultado debe interpretarse con cautela porque solo incluye dos países. Le siguen Europe con 6.154,70 kWh y Asia con 5.099,65 kWh, mientras que Africa registra el promedio más bajo, con 767,41 kWh per cápita. También se evidencia una alta dispersión dentro de algunos continentes, especialmente en Asia y North America, lo que muestra que existen diferencias considerables entre los países de una misma región. Por su parte, el diagrama de dispersión muestra una tendencia positiva entre el consumo per cápita y la generación total de electricidad, aunque los puntos se encuentran bastante dispersos y existen algunos valores extremos. Por esta razón, la relación deberá evaluarse posteriormente junto con las demás variables del modelo de regresión.
+
+```{r Grafica de dispersion de consumo de energia, fig.width=10, fig.height=6}
+
+library(plotly)
+library(dplyr)
+
+# ============================================================
+# PALETA POR CONTINENTE
+# ============================================================
+colores <- c(
+  "Africa"        = "#A85834",
+  "Asia"          = "#3E2416",
+  "Europe"        = "#C9821B",
+  "North America" = "#D4A017",
+  "Oceania"       = "#6D4C2F",
+  "South America" = "#E8C766"
+)
+
+# ============================================================
+# DATOS
+# ============================================================
+datos_plot <- Base_datos %>%
+  filter(
+    !is.na(Consumo), Consumo > 0,
+    !is.na(Generacion), Generacion > 0,
+    !is.na(Continente)
+  ) %>%
+  mutate(
+    Continente = factor(
+      Continente,
+      levels = c("Africa", "Asia", "Europe",
+                 "North America", "Oceania", "South America")
+    )
+  )
+
+# ============================================================
+# TOP 20 POR GENERACIÓN
+# ============================================================
+N_TOP <- 20
+
+top_n <- datos_plot %>%
+  arrange(desc(Generacion)) %>%
+  slice(1:N_TOP) %>%
+  pull(Codigo)
+
+datos_sin_top <- datos_plot %>% filter(!Codigo %in% top_n)
+
+# ============================================================
+# ETIQUETAS TOP 10 EN CADA VISTA
+# ============================================================
+etiquetas_full <- datos_plot %>%
+  arrange(desc(Generacion)) %>%
+  slice(1:10)
+
+etiquetas_filt <- datos_sin_top %>%
+  arrange(desc(Generacion)) %>%
+  slice(1:10)
+
+# ============================================================
+# MODELOS LINEALES
+# ============================================================
+modelo_full <- lm(Generacion ~ Consumo, data = datos_plot)
+modelo_filt <- lm(Generacion ~ Consumo, data = datos_sin_top)
+
+x_seq <- seq(min(datos_plot$Consumo),
+             max(datos_plot$Consumo),
+             length.out = 200)
+
+pred_full <- predict(modelo_full, newdata = data.frame(Consumo = x_seq),
+                     interval = "confidence", level = 0.95)
+pred_filt <- predict(modelo_filt, newdata = data.frame(Consumo = x_seq),
+                     interval = "confidence", level = 0.95)
+
+continentes <- levels(datos_plot$Continente)
+n_cont      <- length(continentes)
+
+# ============================================================
+# FORMATEO DE NÚMEROS EN ESPAÑOL
+# ============================================================
+fmt_num <- function(x, dec = 2) {
+  format(round(x, dec),
+         big.mark = ".", decimal.mark = ",",
+         scientific = FALSE, trim = TRUE)
+}
+
+# ============================================================
+# ANOTACIONES (dentro del layout para que los botones las controlen)
+# ============================================================
+ann_full <- lapply(seq_len(nrow(etiquetas_full)), function(i) {
+  list(
+    x           = etiquetas_full$Consumo[i],
+    y           = etiquetas_full$Generacion[i],
+    xref        = "x",
+    yref        = "y",
+    text        = paste0(
+      "<b style='font-family:Cinzel, Georgia, serif; color:#2E1A0F;'>",
+      etiquetas_full$Codigo[i], "</b>"
+    ),
+    showarrow   = FALSE,
+    bgcolor     = "rgba(251, 243, 221, 0.95)",
+    bordercolor = "#D4A017",
+    borderwidth = 1.2,
+    borderpad   = 3,
+    xshift      = 22,
+    yshift      = 10,
+    font        = list(size = 11),
+    visible     = TRUE
+  )
+})
+
+ann_filt <- lapply(seq_len(nrow(etiquetas_filt)), function(i) {
+  list(
+    x           = etiquetas_filt$Consumo[i],
+    y           = etiquetas_filt$Generacion[i],
+    xref        = "x",
+    yref        = "y",
+    text        = paste0(
+      "<b style='font-family:Cinzel, Georgia, serif; color:#7A2E1A;'>",
+      etiquetas_filt$Codigo[i], "</b>"
+    ),
+    showarrow   = FALSE,
+    bgcolor     = "rgba(251, 243, 221, 0.95)",
+    bordercolor = "#A85834",
+    borderwidth = 1.2,
+    borderpad   = 3,
+    xshift      = 22,
+    yshift      = 10,
+    font        = list(size = 11),
+    visible     = FALSE
+  )
+})
+
+ann_todas <- c(ann_full, ann_filt)
+n_full    <- length(ann_full)
+n_filt    <- length(ann_filt)
+
+# ============================================================
+# VECTORES DE VISIBILIDAD
+# ============================================================
+visible_full <- c(
+  TRUE,  TRUE,           # ribbon_full, trend_full
+  FALSE, FALSE,          # ribbon_filt, trend_filt
+  rep(TRUE,  n_cont),    # markers_full
+  rep(FALSE, n_cont)     # markers_sin
+)
+
+visible_filt <- c(
+  FALSE, FALSE,
+  TRUE,  TRUE,
+  rep(FALSE, n_cont),
+  rep(TRUE,  n_cont)
+)
+
+ann_vis_full <- c(rep(TRUE,  n_full), rep(FALSE, n_filt))
+ann_vis_filt <- c(rep(FALSE, n_full), rep(TRUE,  n_filt))
+
+# ============================================================
+# TRACES
+# ============================================================
+fig <- plot_ly()
+
+# ---- 1. Ribbon full ----
+fig <- fig %>% add_ribbons(
+  x = x_seq, ymin = pred_full[, "lwr"], ymax = pred_full[, "upr"],
+  fillcolor = "#D4A017", opacity = 0.18,
+  line = list(width = 0),
+  name = "IC 95% (todos)",
+  hoverinfo = "skip",
+  showlegend = TRUE
+)
+
+# ---- 2. Trend full ----
+fig <- fig %>% add_lines(
+  x = x_seq, y = pred_full[, "fit"],
+  line = list(color = "#3E2416", width = 3),
+  name = "Tendencia (todos)",
+  hoverinfo = "skip",
+  showlegend = TRUE
+)
+
+# ---- 3. Ribbon filtrado ----
+fig <- fig %>% add_ribbons(
+  x = x_seq, ymin = pred_filt[, "lwr"], ymax = pred_filt[, "upr"],
+  fillcolor = "#A85834", opacity = 0.15,
+  line = list(width = 0),
+  name = "IC 95% (sin Top 20)",
+  hoverinfo = "skip",
+  showlegend = TRUE,
+  visible = FALSE
+)
+
+# ---- 4. Trend filtrado ----
+fig <- fig %>% add_lines(
+  x = x_seq, y = pred_filt[, "fit"],
+  line = list(color = "#A85834", width = 3),
+  name = "Tendencia (sin Top 20)",
+  hoverinfo = "skip",
+  showlegend = TRUE,
+  visible = FALSE
+)
+
+# ---- 5. Markers FULL por continente ----
+for (cont in continentes) {
+  sub <- datos_plot %>% filter(Continente == cont)
+
+  fig <- fig %>% add_markers(
+    data = sub,
+    x = ~Consumo, y = ~Generacion,
+    marker = list(
+      size = 10, opacity = 0.85,
+      color = colores[cont],
+      line = list(color = "#FBF3DD", width = 0.9)
+    ),
+    text = ~paste0(
+      "<b style='color:#3E2416; font-size:13px;'>", Codigo, "</b>",
+      "<br><b>Continente:</b> ",  as.character(Continente),
+      "<br><b>Consumo:</b> ",     fmt_num(Consumo),     " kWh per cápita",
+      "<br><b>Generación:</b> ",  fmt_num(Generacion),  " TWh"
+    ),
+    hoverinfo   = "text",
+    name        = cont,
+    legendgroup = cont,
+    showlegend  = TRUE
+  )
+}
+
+# ---- 6. Markers SIN TOP 20 por continente ----
+for (cont in continentes) {
+  sub <- datos_sin_top %>% filter(Continente == cont)
+
+  fig <- fig %>% add_markers(
+    data = sub,
+    x = ~Consumo, y = ~Generacion,
+    marker = list(
+      size = 10, opacity = 0.85,
+      color = colores[cont],
+      line = list(color = "#FBF3DD", width = 0.9)
+    ),
+    text = ~paste0(
+      "<b style='color:#3E2416; font-size:13px;'>", Codigo, "</b>",
+      "<br><b>Continente:</b> ",  as.character(Continente),
+      "<br><b>Consumo:</b> ",     fmt_num(Consumo),     " kWh per cápita",
+      "<br><b>Generación:</b> ",  fmt_num(Generacion),  " TWh"
+    ),
+    hoverinfo   = "text",
+    name        = paste0(cont, " (sin Top 20)"),
+    legendgroup = cont,
+    showlegend  = FALSE,
+    visible     = FALSE
+  )
+}
+
+# ============================================================
+# TÍTULOS
+# ============================================================
+titulo_base <- paste0(
+  "<b style='font-family:Cinzel, Georgia, serif; color:#3E2416; ",
+  "font-size:18px; letter-spacing:1px;'>",
+  "CONSUMO PER CÁPITA VS GENERACIÓN DE ELECTRICIDAD</b><br>"
+)
+
+subtitulo_full <- "<span style='font-size:12px; color:#8B5E34; font-style:italic;'>Todos los países | Tendencia lineal e IC del 95% | Etiquetas: 10 mayores generadores</span>"
+
+subtitulo_filt <- paste0(
+  "<span style='font-size:12px; color:#8B5E34; font-style:italic;'>",
+  "Sin los ", N_TOP, " mayores generadores | Tendencia lineal e IC del 95%",
+  " | Etiquetas: 10 mayores del resto</span>"
+)
+
+# ============================================================
+# LAYOUT
+# ============================================================
+fig <- fig %>% layout(
+
+  title = list(
+    text    = paste0(titulo_base, subtitulo_full),
+    x       = 0.5,
+    xanchor = "center",
+    y       = 0.97
+  ),
+
+  xaxis = list(
+    title         = "<b>Consumo de electricidad per cápita (kWh)</b>",
+    type          = "linear",
+    gridcolor     = "#E7D3A8",
+    zerolinecolor = "#E7D3A8",
+    tickfont      = list(size = 11, color = "#2B1810"),
+    showline      = TRUE,
+    linecolor     = "#D4A017",
+    linewidth     = 1
+  ),
+
+  yaxis = list(
+    title         = "<b>Generación de electricidad (TWh)</b>",
+    type          = "linear",
+    gridcolor     = "#E7D3A8",
+    zerolinecolor = "#E7D3A8",
+    tickfont      = list(size = 11, color = "#2B1810"),
+    showline      = TRUE,
+    linecolor     = "#D4A017",
+    linewidth     = 1
+  ),
+
+  paper_bgcolor = "#FFFFFF",
+  plot_bgcolor  = "#FBF3DD",
+
+  font = list(
+    family = "EB Garamond, Georgia, serif",
+    color  = "#2B1810",
+    size   = 12
+  ),
+
+  legend = list(
+    title = list(
+      text = paste0(
+        "<b style='font-family:Cinzel, serif; color:#3E2416; ",
+        "font-size:12px; letter-spacing:1px;'>❖ CONTINENTE</b>"
+      )
+    ),
+    orientation = "v",
+    x           = 1.02,
+    xanchor     = "left",
+    y           = 1,
+    yanchor     = "top",
+    bgcolor     = "rgba(251, 243, 221, 0.95)",
+    bordercolor = "#D4A017",
+    borderwidth = 2,
+    font = list(
+      family = "EB Garamond, Georgia, serif",
+      size   = 12,
+      color  = "#3E2416"
+    ),
+    itemsizing = "constant",
+    traceorder = "normal"
+  ),
+
+  # Márgenes: más espacio abajo para los botones
+  margin = list(t = 130, b = 200, l = 90, r = 190),
+
+  # Anotaciones controlables por botones
+  annotations = ann_todas,
+
+  updatemenus = list(
+    list(
+      type        = "buttons",
+      direction   = "right",
+      x           = 0.5,
+      xanchor     = "center",
+      y           = -0.32,          # <<< ANTES ERA -0.14, AHORA MÁS ABAJO
+      yanchor     = "top",
+      showactive  = TRUE,
+      bgcolor     = "#FBF3DD",
+      bordercolor = "#D4A017",
+      borderwidth = 1.5,
+      pad         = list(r = 10, t = 5),
+      font = list(
+        size   = 12,
+        family = "EB Garamond, Georgia, serif",
+        color  = "#3E2416"
+      ),
+      buttons = list(
+
+        # ---- Botón 1: todos los países ----
+        list(
+          label  = "📏 Lineal (todos)",
+          method = "update",
+          args   = list(
+            list(visible = visible_full),
+            list(
+              "title.text"      = paste0(titulo_base, subtitulo_full),
+              "xaxis.autorange" = TRUE,
+              "yaxis.autorange" = TRUE,
+              "annotations"     = lapply(ann_vis_full, function(v) list(visible = v))
+            )
+          )
+        ),
+
+        # ---- Botón 2: sin los 20 mayores ----
+        list(
+          label  = paste0("🚫 Sin Top ", N_TOP),
+          method = "update",
+          args   = list(
+            list(visible = visible_filt),
+            list(
+              "title.text"      = paste0(titulo_base, subtitulo_filt),
+              "xaxis.autorange" = TRUE,
+              "yaxis.autorange" = TRUE,
+              "annotations"     = lapply(ann_vis_filt, function(v) list(visible = v))
+            )
+          )
+        )
+      )
+    )
+  )
+) %>%
+  config(
+    responsive  = TRUE,
+    displaylogo = FALSE,
+    modeBarButtonsToRemove = list("lasso2d", "select2d"),
+    toImageButtonOptions = list(
+      format   = "png",
+      filename = "dispersion_consumo_generacion_2022",
+      width    = 1600,
+      height   = 900
+    )
+  )
+
+fig
+```
+
+
+### Población total
+
+La población total corresponde al número de habitantes de cada país incluido en el estudio. En la Tabla 3 se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados por continente.
+
+```{r Tabla poblacion}
+Tabla_poblacion <- Base_datos %>%
+  group_by(Continente) %>%
+  summarise(
+    N = n(),
+    Promedio = mean(Poblacion),
+    Desv_Estandar = sd(Poblacion),
+    Minimo = min(Poblacion),
+    Maximo = max(Poblacion)
+  )
+
+kable(
+  Tabla_poblacion,
+  format = "html",
+  digits = 2,
+  col.names = c(
+    "Continente",
+    "N",
+    "Población promedio",
+    "Desv. Estándar",
+    "Mínimo",
+    "Máximo"
+  ),
+  caption = "Tabla 3: Estadísticas descriptivas de la población por continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_poblacion), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+
+En la tabla 3 se puede ver como la población total también presenta diferencias amplias entre los países analizados. Asia registra el promedio más alto, con aproximadamente 112,4 millones de habitantes, seguida de North America y South America, mientras que Oceania presenta el promedio más bajo. La variabilidad es especialmente marcada en Asia, donde conviven países con poblaciones relativamente pequeñas y otros que superan los mil millones de habitantes. En el diagrama de dispersión se aprecia que, en general, los países con mayor población tienden a presentar una mayor generación de electricidad, aunque los puntos no siguen un comportamiento uniforme y algunos países se encuentran bastante alejados del grupo principal. Esto refleja que países con tamaños poblacionales similares pueden tener niveles de generación diferentes.
+
+```{r Grafica poblacion}
+library(plotly)
+library(dplyr)
+
+# ============================================================
+# PALETA DE COLORES
+# ============================================================
+
+colores <- c(
+  "#3E2416",  # chocolate
+  "#6D4C2F",  # walnut
+  "#A85834",  # terracotta
+  "#C9821B",  # amber
+  "#D4A017",  # gold
+  "#E8C766"   # gold-light
+)
+
+# ============================================================
+# PREPARACIÓN DE DATOS
+# ============================================================
+
+datos_plot <- Base_datos %>%
+  filter(
+    !is.na(Poblacion),
+    !is.na(Generacion),
+    !is.na(Continente)
+  ) %>%
+  mutate(
+    Continente = as.factor(Continente)
+  )
+
+# ============================================================
+# MODELO PARA LA LÍNEA DE TENDENCIA
+# ============================================================
+
+modelo_poblacion <- lm(
+  Generacion ~ Poblacion,
+  data = datos_plot
+)
+
+x_seq <- seq(
+  min(datos_plot$Poblacion),
+  max(datos_plot$Poblacion),
+  length.out = 200
+)
+
+pred <- predict(
+  modelo_poblacion,
+  newdata = data.frame(Poblacion = x_seq),
+  interval = "confidence",
+  level = 0.95
+)
+
+# ============================================================
+# GRÁFICO
+# ============================================================
+
+fig <- plot_ly()
+
+# Banda de confianza
+fig <- fig %>%
+  add_ribbons(
+    x = x_seq,
+    ymin = pred[, "lwr"],
+    ymax = pred[, "upr"],
+    fillcolor = "#D4A017",
+    opacity = 0.15,
+    line = list(width = 0),
+    name = "IC 95%",
+    hoverinfo = "skip"
+  )
+
+# Países separados por continente
+fig <- fig %>%
+  add_markers(
+    data = datos_plot,
+    x = ~Poblacion,
+    y = ~Generacion,
+    color = ~Continente,
+    colors = colores,
+
+    marker = list(
+      size = 8,
+      opacity = 0.75,
+      line = list(
+        color = "#FBF3DD",
+        width = 0.5
+      )
+    ),
+
+    text = ~paste(
+      "<b>Código:</b>", Codigo,
+      "<br><b>Continente:</b>", Continente,
+      "<br><b>Población:</b>", format(Poblacion, big.mark = ","),
+      "habitantes",
+      "<br><b>Generación:</b>", round(Generacion, 2), "TWh"
+    ),
+
+    hoverinfo = "text",
+    name = "Países"
+  )
+
+# Línea de tendencia general
+fig <- fig %>%
+  add_lines(
+    x = x_seq,
+    y = pred[, "fit"],
+
+    line = list(
+      color = "#3E2416",
+      width = 3
+    ),
+
+    name = "Tendencia lineal",
+
+    hovertemplate = paste0(
+      "<b>Población:</b> %{x:,.0f} habitantes",
+      "<br><b>Generación estimada:</b> %{y:,.2f} TWh",
+      "<extra></extra>"
+    )
+  )
+
+# ============================================================
+# DISEÑO FINAL
+# ============================================================
+
+fig <- fig %>%
+  layout(
+
+    title = list(
+      text = paste0(
+        "<b>RELACIÓN ENTRE POBLACIÓN ",
+        "Y GENERACIÓN DE ELECTRICIDAD</b><br>",
+        "<span style='font-size:12px;color:#8B5E34;'>",
+        "Países clasificados por continente | Tendencia lineal e IC del 95%",
+        "</span>"
+      ),
+      x = 0.5,
+      xanchor = "center",
+      font = list(
+        size = 16,
+        color = "#3E2416",
+        family = "Arial"
+      )
+    ),
+
+    xaxis = list(
+      title = "<b>Población total (habitantes)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8",
+      tickformat = ",.0f"
+    ),
+
+    yaxis = list(
+      title = "<b>Generación de electricidad (TWh)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8"
+    ),
+
+    paper_bgcolor = "#FFFFFF",
+    plot_bgcolor = "#FBF3DD",
+
+    font = list(
+      family = "Arial",
+      color = "#2B1810"
+    ),
+
+    legend = list(
+      title = list(text = "<b>Continente</b>"),
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.18
+    ),
+
+    margin = list(
+      t = 110,
+      b = 120,
+      l = 80,
+      r = 40
+    )
+  )
+
+# ============================================================
+# MOSTRAR
+# ============================================================
+
+fig
+```
+
+
+### PIB total 
+
+El PIB total representa el valor de la producción económica de cada país, expresado en dólares estadounidenses (USD). En la Tabla 4 se presentan sus principales estadísticas descriptivas para los 140 países de la muestra, agrupados por continente.
+
+```{r Tabla PIB}
+Tabla_pib <- Base_datos %>%
+  group_by(Continente) %>%
+  summarise(
+    N = n(),
+    Promedio = mean(PIB),
+    Desv_Estandar = sd(PIB),
+    Minimo = min(PIB),
+    Maximo = max(PIB)
+  )
+
+kable(
+  Tabla_pib,
+  format = "html",
+  digits = 2,
+  col.names = c(
+    "Continente",
+    "N",
+    "PIB promedio",
+    "Desv. Estándar",
+    "Mínimo",
+    "Máximo"
+  ),
+  caption = "Tabla 4: Estadísticas descriptivas del PIB total por continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_pib), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+
+El PIB total muestra una marcada diferencia en el tamaño de las economías incluidas en el estudio. North America presenta el promedio más alto, con aproximadamente 2,34 billones de USD, seguido de Asia con 1,84 billones de USD, mientras que África registra el menor promedio, cercano a 246,7 mil millones de USD. A su vez, existe una amplia dispersión entre los países, principalmente en North America y Asia, donde algunos valores son considerablemente superiores al resto. En el diagrama de dispersión se observa que los mayores niveles de PIB tienden a acompañarse de una mayor generación de electricidad, aunque gran parte de los países se concentra en valores más bajos y unas pocas observaciones se encuentran bastante alejadas del conjunto principal.
+
+```{r Grafica PIB}
+library(plotly)
+library(dplyr)
+
+# ============================================================
+# PALETA DE COLORES
+# ============================================================
+
+colores <- c(
+  "#3E2416",  # chocolate
+  "#6D4C2F",  # walnut
+  "#A85834",  # terracotta
+  "#C9821B",  # amber
+  "#D4A017",  # gold
+  "#E8C766"   # gold-light
+)
+
+# ============================================================
+# PREPARACIÓN DE DATOS
+# ============================================================
+
+datos_plot <- Base_datos %>%
+  filter(
+    !is.na(PIB),
+    !is.na(Generacion),
+    !is.na(Continente)
+  ) %>%
+  mutate(
+    Continente = as.factor(Continente)
+  )
+
+# ============================================================
+# MODELO PARA LA LÍNEA DE TENDENCIA
+# ============================================================
+
+modelo_pib <- lm(
+  Generacion ~ PIB,
+  data = datos_plot
+)
+
+x_seq <- seq(
+  min(datos_plot$PIB),
+  max(datos_plot$PIB),
+  length.out = 200
+)
+
+pred <- predict(
+  modelo_pib,
+  newdata = data.frame(PIB = x_seq),
+  interval = "confidence",
+  level = 0.95
+)
+
+# ============================================================
+# GRÁFICO
+# ============================================================
+
+fig <- plot_ly()
+
+# Banda de confianza
+fig <- fig %>%
+  add_ribbons(
+    x = x_seq,
+    ymin = pred[, "lwr"],
+    ymax = pred[, "upr"],
+    fillcolor = "#D4A017",
+    opacity = 0.15,
+    line = list(width = 0),
+    name = "IC 95%",
+    hoverinfo = "skip"
+  )
+
+# Países separados por continente
+fig <- fig %>%
+  add_markers(
+    data = datos_plot,
+    x = ~PIB,
+    y = ~Generacion,
+    color = ~Continente,
+    colors = colores,
+
+    marker = list(
+      size = 8,
+      opacity = 0.75,
+      line = list(
+        color = "#FBF3DD",
+        width = 0.5
+      )
+    ),
+
+    text = ~paste(
+      "<b>Código:</b>", Codigo,
+      "<br><b>Continente:</b>", Continente,
+      "<br><b>PIB total:</b> $",
+      format(PIB, big.mark = ",", scientific = FALSE),
+      " USD",
+      "<br><b>Generación:</b>",
+      round(Generacion, 2), "TWh"
+    ),
+
+    hoverinfo = "text",
+    name = "Países"
+  )
+
+# Línea de tendencia general
+fig <- fig %>%
+  add_lines(
+    x = x_seq,
+    y = pred[, "fit"],
+
+    line = list(
+      color = "#3E2416",
+      width = 3
+    ),
+
+    name = "Tendencia lineal",
+
+    hovertemplate = paste0(
+      "<b>PIB total:</b> $%{x:,.0f} USD",
+      "<br><b>Generación estimada:</b> %{y:,.2f} TWh",
+      "<extra></extra>"
+    )
+  )
+
+# ============================================================
+# DISEÑO FINAL
+# ============================================================
+
+fig <- fig %>%
+  layout(
+
+    title = list(
+      text = paste0(
+        "<b>RELACIÓN ENTRE PIB TOTAL ",
+        "Y GENERACIÓN DE ELECTRICIDAD</b><br>",
+        "<span style='font-size:12px;color:#8B5E34;'>",
+        "Países clasificados por continente | Tendencia lineal e IC del 95%",
+        "</span>"
+      ),
+      x = 0.5,
+      xanchor = "center",
+      font = list(
+        size = 16,
+        color = "#3E2416",
+        family = "Arial"
+      )
+    ),
+
+    xaxis = list(
+      title = "<b>PIB total (USD)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8",
+      tickformat = "$,.0s"
+    ),
+
+    yaxis = list(
+      title = "<b>Generación de electricidad (TWh)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8"
+    ),
+
+    paper_bgcolor = "#FFFFFF",
+    plot_bgcolor = "#FBF3DD",
+
+    font = list(
+      family = "Arial",
+      color = "#2B1810"
+    ),
+
+    legend = list(
+      title = list(text = "<b>Continente</b>"),
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.18
+    ),
+
+    margin = list(
+      t = 110,
+      b = 120,
+      l = 80,
+      r = 40
+    )
+  )
+
+# ============================================================
+# MOSTRAR
+# ============================================================
+
+fig
+```
+
+
+### Acceso a electricidad
+
+El acceso a electricidad corresponde al porcentaje de la población de cada país que cuenta con acceso a este servicio. En la Tabla 5 se presentan sus principales estadísticas descriptivas para los 140 países incluidos en la muestra, agrupados por continente.
+
+```{r Tabla acceso electricidad}
+Tabla_acceso <- Base_datos %>%
+  group_by(Continente) %>%
+  summarise(
+    N = n(),
+    Promedio = mean(Acceso),
+    Desv_Estandar = sd(Acceso),
+    Minimo = min(Acceso),
+    Maximo = max(Acceso)
+  )
+
+kable(
+  Tabla_acceso,
+  format = "html",
+  digits = 2,
+  col.names = c(
+    "Continente",
+    "N",
+    "Acceso promedio (%)",
+    "Desv. Estándar",
+    "Mínimo",
+    "Máximo"
+  ),
+  caption = "Tabla 5: Estadísticas descriptivas del acceso a electricidad por continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_acceso), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+
+Los resultados muestran que el acceso a electricidad es elevado en gran parte de los países analizados. Europe y Oceania presentan un promedio del 100 %, seguidos de South America con 99,51 % y Asia con 98,40 %. En contraste, Africa registra el promedio más bajo con 62,18 % y también la mayor dispersión, con una desviación estándar de 24,92, lo que refleja diferencias importantes entre los países de este continente. North America también presenta cierta variabilidad, con valores que van desde 49,3 % hasta 100 %. En el diagrama de dispersión se observa que muchos países se concentran cerca del 100 % de acceso, pero presentan niveles de generación de electricidad muy diferentes entre sí. Por esta razón, un acceso similar a la electricidad no necesariamente se relaciona con niveles similares de generación.
+
+```{r Grafica acceso electricidad}
+library(plotly)
+library(dplyr)
+
+# ============================================================
+# PALETA DE COLORES
+# ============================================================
+
+colores <- c(
+  "#3E2416",  # chocolate
+  "#6D4C2F",  # walnut
+  "#A85834",  # terracotta
+  "#C9821B",  # amber
+  "#D4A017",  # gold
+  "#E8C766"   # gold-light
+)
+
+# ============================================================
+# PREPARACIÓN DE DATOS
+# ============================================================
+
+datos_plot <- Base_datos %>%
+  filter(
+    !is.na(Acceso),
+    !is.na(Generacion),
+    !is.na(Continente)
+  ) %>%
+  mutate(
+    Continente = as.factor(Continente)
+  )
+
+# ============================================================
+# MODELO PARA LA LÍNEA DE TENDENCIA
+# ============================================================
+
+modelo_acceso <- lm(
+  Generacion ~ Acceso,
+  data = datos_plot
+)
+
+x_seq <- seq(
+  min(datos_plot$Acceso),
+  max(datos_plot$Acceso),
+  length.out = 200
+)
+
+pred <- predict(
+  modelo_acceso,
+  newdata = data.frame(Acceso = x_seq),
+  interval = "confidence",
+  level = 0.95
+)
+
+# ============================================================
+# GRÁFICO
+# ============================================================
+
+fig <- plot_ly()
+
+# Banda de confianza
+fig <- fig %>%
+  add_ribbons(
+    x = x_seq,
+    ymin = pred[, "lwr"],
+    ymax = pred[, "upr"],
+    fillcolor = "#D4A017",
+    opacity = 0.15,
+    line = list(width = 0),
+    name = "IC 95%",
+    hoverinfo = "skip"
+  )
+
+# Países separados por continente
+fig <- fig %>%
+  add_markers(
+    data = datos_plot,
+    x = ~Acceso,
+    y = ~Generacion,
+    color = ~Continente,
+    colors = colores,
+
+    marker = list(
+      size = 8,
+      opacity = 0.75,
+      line = list(
+        color = "#FBF3DD",
+        width = 0.5
+      )
+    ),
+
+    text = ~paste(
+      "<b>Código:</b>", Codigo,
+      "<br><b>Continente:</b>", Continente,
+      "<br><b>Acceso a electricidad:</b>",
+      round(Acceso, 2), "%",
+      "<br><b>Generación:</b>",
+      round(Generacion, 2), "TWh"
+    ),
+
+    hoverinfo = "text",
+    name = "Países"
+  )
+
+# Línea de tendencia general
+fig <- fig %>%
+  add_lines(
+    x = x_seq,
+    y = pred[, "fit"],
+
+    line = list(
+      color = "#3E2416",
+      width = 3
+    ),
+
+    name = "Tendencia lineal",
+
+    hovertemplate = paste0(
+      "<b>Acceso:</b> %{x:.2f}%",
+      "<br><b>Generación estimada:</b> %{y:,.2f} TWh",
+      "<extra></extra>"
+    )
+  )
+
+# ============================================================
+# DISEÑO FINAL
+# ============================================================
+
+fig <- fig %>%
+  layout(
+
+    title = list(
+      text = paste0(
+        "<b>RELACIÓN ENTRE ACCESO A ELECTRICIDAD ",
+        "Y GENERACIÓN DE ELECTRICIDAD</b><br>",
+        "<span style='font-size:12px;color:#8B5E34;'>",
+        "Países clasificados por continente | Tendencia lineal e IC del 95%",
+        "</span>"
+      ),
+      x = 0.5,
+      xanchor = "center",
+      font = list(
+        size = 16,
+        color = "#3E2416",
+        family = "Arial"
+      )
+    ),
+
+    xaxis = list(
+      title = "<b>Acceso a electricidad (%)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8",
+      ticksuffix = "%",
+      range = c(0, 100)
+    ),
+
+    yaxis = list(
+      title = "<b>Generación de electricidad (TWh)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8"
+    ),
+
+    paper_bgcolor = "#FFFFFF",
+    plot_bgcolor = "#FBF3DD",
+
+    font = list(
+      family = "Arial",
+      color = "#2B1810"
+    ),
+
+    legend = list(
+      title = list(text = "<b>Continente</b>"),
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.18
+    ),
+
+    margin = list(
+      t = 110,
+      b = 120,
+      l = 80,
+      r = 40
+    )
+  )
+
+# ============================================================
+# MOSTRAR
+# ============================================================
+
+fig
+```
+
+
+
+## Variable categórica: Distribución de Frecuencias 
+
+### Continente
+
+La variable continente permite clasificar los países de la muestra según su ubicación geográfica. En la Tabla 6 se presenta la distribución de frecuencias y porcentajes de los 140 países incluidos en el estudio.
+
+```{r Tabla continente}
+Tabla_continente <- Base_datos %>%
+  count(Continente) %>%
+  arrange(desc(n)) %>%
+  mutate(
+    Porcentaje = n / sum(n) * 100,
+    Porcentaje_Acumulado = cumsum(Porcentaje)
+  ) %>%
+  rename(
+    Frecuencia = n
+  )
+
+# ============================================================
+# MOSTRAR TABLA
+# ============================================================
+
+knitr::kable(
+  Tabla_continente,
+  format = "html",
+  digits = 1,
+  col.names = c(
+    "Continente",
+    "Frecuencia",
+    "Porcentaje (%)",
+    "Porcentaje Acumulado (%)"
+  ),
+  caption = "Tabla 6: Distribución de frecuencias de los países según continente"
+) %>%
+  kableExtra::kable_styling(
+    bootstrap_options = c("striped", "hover"),
+    full_width = TRUE,
+    position = "center"
+  ) %>%
+  kableExtra::row_spec(
+    0,
+    bold = TRUE,
+    color = "#FBF3DD",
+    background = "#3E2416"
+  ) %>%
+  kableExtra::row_spec(
+    seq(2, nrow(Tabla_continente), by = 2),
+    background = "#F5E6C8"
+  )
+```
+
+
+La muestra está conformada principalmente por países de Asia, con 41 observaciones (29,3 %), seguida de Europe con 39 (27,9 %) y Africa con 35 (25,0 %). En menor proporción se encuentran North America con 13 países (9,3 %), South America con 10 (7,1 %) y Oceania con solo 2 (1,4 %). Al observar la distribución de la generación de electricidad por continente, se evidencian diferencias importantes entre los países de cada grupo, con una mayor dispersión y presencia de valores elevados especialmente en Asia y North America. También se observa que el número de países no es igual entre continentes, por lo que los resultados de grupos con pocas observaciones, particularmente Oceania, deben interpretarse con cautela.
+
+```{r Grafica continente}
+library(plotly)
+library(dplyr)
+
+# ============================================================
+# PALETA DE COLORES
+# ============================================================
+
+colores_continente <- c(
+  "#3E2416",  # chocolate
+  "#6D4C2F",  # walnut
+  "#A85834",  # terracotta
+  "#C9821B",  # amber
+  "#D4A017",  # gold
+  "#E8C766"   # gold-light
+)
+
+# ============================================================
+# GRÁFICO DE CAJAS Y BIGOTES
+# ============================================================
+
+fig <- plot_ly(
+  data = Base_datos,
+  x = ~Continente,
+  y = ~Generacion,
+  color = ~Continente,
+  colors = colores_continente,
+  type = "box",
+  boxpoints = "outliers",
+  
+  marker = list(
+    size = 7,
+    opacity = 0.75,
+    line = list(
+      color = "#FBF3DD",
+      width = 0.5
+    )
+  ),
+  
+  line = list(
+    width = 2
+  ),
+  
+  hovertemplate = paste0(
+    "<b>Continente:</b> %{x}",
+    "<br><b>Generación:</b> %{y:,.2f} TWh",
+    "<extra></extra>"
+  )
+)
+
+# ============================================================
+# DISEÑO FINAL
+# ============================================================
+
+fig <- fig %>%
+  layout(
+    
+    title = list(
+      text = paste0(
+        "<b>DISTRIBUCIÓN DE LA GENERACIÓN DE ELECTRICIDAD ",
+        "POR CONTINENTE</b><br>",
+        "<span style='font-size:12px;color:#8B5E34;'>",
+        "Comparación de la distribución entre continentes",
+        "</span>"
+      ),
+      x = 0.5,
+      xanchor = "center",
+      font = list(
+        size = 16,
+        color = "#3E2416",
+        family = "Arial"
+      )
+    ),
+    
+    xaxis = list(
+      title = "<b>Continente</b>",
+      gridcolor = "#E7D3A8"
+    ),
+    
+    yaxis = list(
+      title = "<b>Generación de electricidad (TWh)</b>",
+      gridcolor = "#E7D3A8",
+      zerolinecolor = "#E7D3A8"
+    ),
+    
+    paper_bgcolor = "#FFFFFF",
+    plot_bgcolor = "#FBF3DD",
+    
+    font = list(
+      family = "Arial",
+      color = "#2B1810"
+    ),
+    
+    showlegend = FALSE,
+    
+    margin = list(
+      t = 110,
+      b = 80,
+      l = 80,
+      r = 40
+    )
+  )
+
+# ============================================================
+# MOSTRAR
+# ============================================================
+
+fig
+```
+
+
+
+# Estimación del modelo de regresión multiple
+
+```{r Tabla modelo regresion lineal multiple}
+library(broom)
+library(dplyr)
+library(kableExtra)
+
+Modelo_final <- lm(
+  Generacion ~ Poblacion + PIB + Consumo + Acceso + Continente,
+  data = Base_datos
+)
+
+resumen_mod <- broom::tidy(Modelo_final) %>%
+  mutate(across(where(is.numeric), ~ round(., 5))) %>%
+  rename(
+    `Variable` = term,
+    `Coeficiente` = estimate,
+    `Error Estándar` = std.error,
+    `Estadístico t` = statistic,
+    `Valor p` = p.value
+  ) %>%
+  mutate(
+    Significancia = case_when(
+      `Valor p` < 0.001 ~ "***",
+      `Valor p` < 0.01  ~ "**",
+      `Valor p` < 0.05  ~ "*",
+      `Valor p` < 0.1   ~ ".",
+      TRUE ~ ""
+    ),
+    `Valor p formateado` = case_when(
+      is.na(`Valor p`) ~ "NA",
+      `Valor p` < 0.0001 ~ "< 0.0001",
+      TRUE ~ sprintf("%.4f", `Valor p`)
+    )
+  )
+
+resumen_global <- broom::glance(Modelo_final)
+
+R2 <- round(resumen_global$adj.r.squared, 4)
+Fstat <- round(resumen_global$statistic, 2)
+
+pvalor_modelo <- ifelse(
+  resumen_global$p.value < 0.0001,
+  "< 0.0001",
+  sprintf("%.4f", resumen_global$p.value)
+)
+
+N <- nobs(Modelo_final)
+
+filas_resumen <- tibble(
+  Variable = c("R² ajustado", "F", "Valor p (modelo)", "N"),
+  Coeficiente = as.character(c(R2, Fstat, pvalor_modelo, N)),
+  `Error Estándar` = "",
+  `Estadístico t` = "",
+  `Valor p formateado` = "",
+  Significancia = ""
+)
+
+tabla_principal <- resumen_mod %>%
+  select(
+    Variable,
+    Coeficiente,
+    `Error Estándar`,
+    `Estadístico t`,
+    `Valor p formateado`,
+    Significancia
+  ) %>%
+  mutate_all(as.character)
+
+tabla_final <- bind_rows(tabla_principal, filas_resumen)
+
+names(tabla_final) <- c(
+  "Variable",
+  "Coeficiente",
+  "Error Estándar",
+  "Estadístico t",
+  "Valor p",
+  "Sig."
+)
+
+kbl(
+  tabla_final,
+  caption = "Tabla 7: Resultados del modelo de regresión lineal múltiple",
+  align = c("l", "r", "r", "r", "r", "c")
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    font_size = 14,
+    position = "center"
+  ) %>%
+  row_spec(
+    0,
+    background = "#3E2416",
+    color = "#FBF3DD",
+    bold = TRUE
+  ) %>%
+  column_spec(
+    1,
+    bold = TRUE,
+    width = "4cm"
+  ) %>%
+  column_spec(
+    2:6,
+    width = "2.5cm"
+  ) %>%
+  row_spec(
+    (nrow(tabla_principal) + 1):nrow(tabla_final),
+    bold = TRUE,
+    background = "#F0DFA8",
+    color = "#2B1810"
+  ) %>%
+  footnote(
+    general = "Elaboración propia con base en Our World in Data, 2022.",
+    general_title = "Nota:",
+    footnote_as_chunk = TRUE
+  )
+```
+
+
+
+El intercepto del modelo es 1,797 TWh y presenta un valor p de 0,9864, por lo que no es estadísticamente significativo. Este valor representa la generación esperada cuando las variables cuantitativas toman el valor de cero y el país pertenece al continente de referencia. Sin embargo, estas condiciones no representan un escenario realista para los países analizados, por lo que el intercepto tiene principalmente una función matemática dentro del modelo.
+
+En cuanto a la población, el coeficiente aparece como cero debido a la escala en la que está medida la variable, ya que se encuentra expresada en número de habitantes. Su valor p es 0,2443, por lo que no presenta una asociación estadísticamente significativa con la generación de electricidad una vez se mantienen constantes las demás variables del modelo. Esto no significa que la población no tenga relación con la generación, sino que su efecto individual no resulta significativo al analizarla conjuntamente con los demás factores.
+
+El PIB total es la única variable cuantitativa que presenta una asociación estadísticamente significativa con la generación de electricidad (p < 0,0001). Aunque su coeficiente aparece como cero en la tabla debido a que el PIB está expresado en dólares y, por tanto, el efecto de un solo dólar es muy pequeño, el estadístico t de 21,16 muestra una relación positiva y claramente significativa. En otras palabras, manteniendo constantes las demás variables, los países con un PIB total mayor tienden a presentar una mayor generación de electricidad.
+
+Para el consumo de electricidad per cápita, el coeficiente estimado es 0,00277, lo que indica una asociación positiva con la generación. Sin embargo, esta relación no es estadísticamente significativa (p = 0,6180) después de controlar por las demás variables. De forma similar, el acceso a electricidad presenta un coeficiente de −0,68043 y un valor p de 0,6638, por lo que tampoco se encuentra evidencia suficiente de una asociación estadísticamente significativa dentro del modelo.
+
+Para la variable continente, Africa funciona como categoría de referencia. Frente a ella, Asia presenta una diferencia estimada de 1,96 TWh, Europe de −39,27 TWh, North America de −65,99 TWh, Oceania de −6,87 TWh y South America de −9,03 TWh, manteniendo constantes las demás variables. Sin embargo, ninguna de estas diferencias es estadísticamente significativa, ya que todos sus valores p son superiores a 0,05. Por lo tanto, con esta muestra y una vez considerados simultáneamente los demás factores, no se encuentra evidencia suficiente para afirmar que la generación difiera por continente respecto a Africa.
+
+Finalmente, el modelo presenta un R² ajustado de 0,9192, lo que indica que aproximadamente el 91,92 % de la variabilidad observada en la generación de electricidad entre los países de la muestra es explicada conjuntamente por las variables incluidas. Además, el estadístico F es 176,75 y el valor p global es menor a 0,0001, lo que indica que el modelo, considerado en conjunto, es estadísticamente significativo. Estos resultados muestran una alta capacidad explicativa del modelo para los 140 países analizados, aunque posteriormente es necesario revisar los supuestos y diagnósticos de la regresión antes de establecer las conclusiones finales.
+
+
+
+
+# Resultados del modelo
+
+## Diagnóstico gráfico de supuestos
+
+Para evaluar la validez del modelo de regresión lineal múltiple se realizó un diagnóstico gráfico de sus principales supuestos. Este análisis permite revisar el comportamiento de los residuos y detectar posibles problemas relacionados con la linealidad, normalidad y homocedasticidad, así como la presencia de observaciones que puedan afectar el ajuste del modelo. Cada uno de estos aspectos se analiza a continuación mediante los gráficos correspondientes.
+
+### Lineal
+
+El supuesto de linealidad se evaluó mediante el gráfico de residuos frente a los valores ajustados. En este caso, los residuos no se distribuyen de manera completamente aleatoria alrededor de cero, ya que la línea de tendencia presenta una curvatura marcada, especialmente a medida que aumentan los valores ajustados de generación. Además, se observan algunas observaciones alejadas del resto, principalmente en los niveles más altos de generación. Este comportamiento sugiere que el supuesto de linealidad no se cumple completamente y que el modelo lineal puede tener dificultades para representar adecuadamente la relación en los países con niveles de generación más elevados. Este resultado se tendrá en cuenta junto con los demás diagnósticos antes de establecer las conclusiones finales del modelo.
+
+```{r Residuos valores ajustados}
+
+# Obtener residuos y valores ajustados
+res_df <- broom::augment(Modelo_final)
+
+# Construir gráfico
+resid_vs_ajustados <- ggplot(
+  res_df,
+  aes(x = .fitted, y = .resid)
+) +
+  
+  geom_point(
+    aes(
+      color = abs(.resid),
+      size = abs(.resid)
+    ),
+    alpha = 0.6,
+    show.legend = FALSE
+  ) +
+  
+  # Línea de residuo cero
+  geom_hline(
+    yintercept = 0,
+    color = "#A85834",
+    linetype = "dashed",
+    linewidth = 1.2,
+    alpha = 0.8
+  ) +
+  
+  # Tendencia LOESS
+  geom_smooth(
+    method = "loess",
+    color = "#3E2416",
+    fill = "#D4A017",
+    alpha = 0.20,
+    linewidth = 1.2,
+    se = TRUE
+  ) +
+  
+  scale_color_gradient(
+    low = "#E8C766",
+    high = "#A85834"
+  ) +
+  
+  scale_size_continuous(
+    range = c(2, 6)
+  ) +
+  
+  labs(
+    title = "ANÁLISIS DE RESIDUOS VS VALORES AJUSTADOS",
+    subtitle = "Validación de los supuestos de linealidad y homocedasticidad",
+    x = "Valores ajustados de generación (TWh)",
+    y = "Residuos",
+    caption = paste(
+      "Fuente: Elaboración propia con base en Our World in Data, 2022 |",
+      "Línea chocolate: tendencia LOESS |",
+      "Línea terracota: residuo cero"
+    )
+  ) +
+  
+  theme_minimal() +
+  
+  theme(
+    text = element_text(
+      family = "sans",
+      color = "#2B1810"
+    ),
+    
+    plot.title = element_text(
+      face = "bold",
+      size = 16,
+      hjust = 0.5,
+      color = "#3E2416",
+      margin = margin(b = 10)
+    ),
+    
+    plot.subtitle = element_text(
+      size = 12,
+      hjust = 0.5,
+      color = "#8B5E34",
+      margin = margin(b = 20)
+    ),
+    
+    plot.caption = element_text(
+      size = 10,
+      color = "#6D4C2F",
+      hjust = 0.5,
+      margin = margin(t = 15)
+    ),
+    
+    axis.title = element_text(
+      face = "bold",
+      size = 12,
+      color = "#2B1810"
+    ),
+    
+    axis.text = element_text(
+      size = 10,
+      color = "#2B1810"
+    ),
+    
+    panel.grid.major = element_line(
+      color = "#E7D3A8"
+    ),
+    
+    panel.grid.minor = element_line(
+      color = "#F0DFA8"
+    ),
+    
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    
+    panel.background = element_rect(
+      fill = "#FBF3DD",
+      color = NA
+    )
+  )
+
+print(resid_vs_ajustados)
+```
+
+
+### Normalidad
+
+La normalidad de los residuos se evaluó mediante el gráfico Q-Q, comparando los cuantiles observados de los residuos con los esperados bajo una distribución normal. Cuando los puntos se mantienen próximos a la línea de referencia, se considera que los residuos presentan un comportamiento cercano a la normalidad.
+
+```{r normalidad-qq, fig.width=10, fig.height=6}
+
+# Obtener residuos del modelo
+res_df <- broom::augment(Modelo_final)
+
+# Gráfico Q-Q de los residuos
+G_qq <- ggplot(
+  res_df,
+  aes(sample = .resid)
+) +
+  
+  # Cuantiles observados
+  geom_qq(
+    alpha = 0.65,
+    color = "#B8892E",
+    size = 2
+  ) +
+  
+  # Línea de referencia de normalidad
+  geom_qq_line(
+    color = "#3E2416",
+    linewidth = 1.2
+  ) +
+  
+  # Títulos
+  labs(
+    title = "GRÁFICO Q-Q DE LOS RESIDUOS",
+    subtitle = "Validación de normalidad - Residuos vs distribución normal teórica",
+    x = "Cuantiles teóricos",
+    y = "Cuantiles de los residuos",
+    caption = "Fuente: Elaboración propia con base en Our World in Data, 2022"
+  ) +
+  
+  # Diseño
+  theme_minimal() +
+  
+  theme(
+    text = element_text(
+      family = "sans",
+      color = "#2B1810"
+    ),
+    
+    plot.title = element_text(
+      face = "bold",
+      size = 16,
+      hjust = 0.5,
+      color = "#3E2416",
+      margin = margin(b = 10)
+    ),
+    
+    plot.subtitle = element_text(
+      size = 12,
+      hjust = 0.5,
+      color = "#8B5E34",
+      margin = margin(b = 20)
+    ),
+    
+    plot.caption = element_text(
+      size = 10,
+      color = "#6D4C2F",
+      hjust = 0.5,
+      margin = margin(t = 15)
+    ),
+    
+    axis.title = element_text(
+      face = "bold",
+      size = 12,
+      color = "#2B1810"
+    ),
+    
+    axis.text = element_text(
+      size = 10,
+      color = "#2B1810"
+    ),
+    
+    panel.grid.major = element_line(
+      color = "#E7D3A8"
+    ),
+    
+    panel.grid.minor = element_line(
+      color = "#F0DFA8"
+    ),
+    
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    
+    panel.background = element_rect(
+      fill = "#FBF3DD",
+      color = NA
+    )
+  )
+
+print(G_qq)
+```
+
+
+
+El gráfico muestra que los residuos se ajustan razonablemente a la línea de referencia en la parte central de la distribución. Sin embargo, hacia ambos extremos los puntos comienzan a separarse de manera considerable, con algunas observaciones especialmente alejadas de la línea. La desviación es particularmente evidente en la cola superior, donde aparece un residuo mucho mayor que el resto. Por lo tanto, el supuesto de normalidad no se cumple completamente, principalmente por la presencia de residuos extremos. Este comportamiento es coherente con la alta dispersión observada previamente en la generación de electricidad entre los países y deberá tenerse en cuenta al interpretar los resultados del modelo.
+
+
+Como complemento al gráfico Q-Q, se analizó la distribución de los residuos mediante un histograma acompañado de la densidad observada y la distribución normal teórica. Este gráfico permite evaluar si los residuos se concentran alrededor de cero y si su forma se aproxima a la esperada bajo el supuesto de normalidad.
+
+
+```{r distribucion-residuos, fig.width=10, fig.height=6}
+
+# Obtener residuos del modelo
+res_df <- broom::augment(Modelo_final)
+
+# Media y desviación estándar de los residuos
+media_res <- mean(res_df$.resid, na.rm = TRUE)
+sd_res <- sd(res_df$.resid, na.rm = TRUE)
+
+# Gráfico de distribución de residuos
+G_residuos <- ggplot(
+  res_df,
+  aes(x = .resid)
+) +
+  
+  # Histograma
+  geom_histogram(
+    aes(y = after_stat(density)),
+    bins = 20,
+    fill = "#B8892E",
+    color = "#FBF3DD",
+    alpha = 0.80
+  ) +
+  
+  # Densidad observada
+  geom_density(
+    color = "#A85834",
+    linewidth = 1.3,
+    adjust = 1
+  ) +
+  
+  # Distribución normal teórica
+  stat_function(
+    fun = dnorm,
+    args = list(
+      mean = media_res,
+      sd = sd_res
+    ),
+    color = "#D4A017",
+    linewidth = 1.3,
+    linetype = "dashed"
+  ) +
+  
+  # Línea en residuo cero
+  geom_vline(
+    xintercept = 0,
+    color = "#3E2416",
+    linewidth = 1.1,
+    linetype = "dashed"
+  ) +
+  
+  # Títulos
+  labs(
+    title = "DISTRIBUCIÓN DE LOS RESIDUOS DEL MODELO",
+    subtitle = paste0(
+      "Validación del supuesto de normalidad de los errores\n",
+      "Línea terracota: densidad observada | ",
+      "Línea dorada: distribución normal teórica"
+    ),
+    x = "Residuos",
+    y = "Densidad",
+    caption = "Fuente: Elaboración propia con base en Our World in Data, 2022"
+  ) +
+  
+  # Diseño
+  theme_minimal() +
+  
+  theme(
+    text = element_text(
+      family = "sans",
+      color = "#2B1810"
+    ),
+    
+    plot.title = element_text(
+      face = "bold",
+      size = 16,
+      hjust = 0.5,
+      color = "#3E2416",
+      margin = margin(b = 10)
+    ),
+    
+    plot.subtitle = element_text(
+      size = 11,
+      hjust = 0.5,
+      color = "#8B5E34",
+      margin = margin(b = 20)
+    ),
+    
+    plot.caption = element_text(
+      size = 10,
+      color = "#6D4C2F",
+      hjust = 0.5,
+      margin = margin(t = 15)
+    ),
+    
+    axis.title = element_text(
+      face = "bold",
+      size = 12,
+      color = "#2B1810"
+    ),
+    
+    axis.text = element_text(
+      size = 10,
+      color = "#2B1810"
+    ),
+    
+    panel.grid.major = element_line(
+      color = "#E7D3A8"
+    ),
+    
+    panel.grid.minor = element_line(
+      color = "#F0DFA8"
+    ),
+    
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    
+    panel.background = element_rect(
+      fill = "#FBF3DD",
+      color = NA
+    )
+  )
+
+print(G_residuos)
+```
+
+
+
+La distribución de los residuos presenta una concentración marcada alrededor de valores cercanos a cero, pero su forma difiere de manera importante de la distribución normal teórica. La densidad observada muestra un pico mucho más pronunciado y una mayor presencia de valores alejados del centro, incluyendo algunos residuos extremos tanto negativos como positivos. Esto indica que la distribución no es simétrica ni sigue adecuadamente la forma esperada bajo normalidad. En conjunto con lo observado en el gráfico Q-Q, se concluye que el supuesto de normalidad de los residuos no se cumple completamente, principalmente por la concentración central y la presencia de observaciones extremas.
+
+
+### Homocedasticidad
+
+El supuesto de homocedasticidad se evaluó mediante el gráfico Scale-Location, que permite observar si la dispersión de los residuos se mantiene aproximadamente constante a lo largo de los valores ajustados. Una tendencia relativamente horizontal indicaría una varianza estable, mientras que cambios marcados en la dispersión pueden evidenciar problemas de heterocedasticidad.
+
+
+```{r scale-location, fig.width=10, fig.height=6}
+
+# Obtener información del modelo
+res_df <- broom::augment(Modelo_final)
+
+# Calcular raíz de los residuos estandarizados
+res_df <- res_df %>%
+  mutate(
+    sqrt_resid_std = sqrt(abs(.std.resid))
+  )
+
+# Media como línea de referencia
+media_scale <- mean(
+  res_df$sqrt_resid_std,
+  na.rm = TRUE
+)
+
+# Gráfico Scale-Location
+G_scale <- ggplot(
+  res_df,
+  aes(
+    x = .fitted,
+    y = sqrt_resid_std
+  )
+) +
+  
+  # Puntos
+  geom_point(
+    aes(
+      color = sqrt_resid_std,
+      size = sqrt_resid_std
+    ),
+    alpha = 0.65,
+    show.legend = FALSE
+  ) +
+  
+  # Línea horizontal de referencia
+  geom_hline(
+    yintercept = media_scale,
+    color = "#A85834",
+    linetype = "dashed",
+    linewidth = 1.2,
+    alpha = 0.8
+  ) +
+  
+  # Tendencia LOESS
+  geom_smooth(
+    method = "loess",
+    color = "#3E2416",
+    fill = "#D4A017",
+    alpha = 0.20,
+    linewidth = 1.2,
+    se = TRUE
+  ) +
+  
+  # Colores
+  scale_color_gradient(
+    low = "#E8C766",
+    high = "#A85834"
+  ) +
+  
+  scale_size_continuous(
+    range = c(2, 6)
+  ) +
+  
+  # Títulos
+  labs(
+    title = "GRÁFICO SCALE-LOCATION - VERIFICACIÓN DE HOMOCEDASTICIDAD",
+    subtitle = "Raíz de los residuos estandarizados vs valores ajustados",
+    x = "Valores ajustados de generación (TWh)",
+    y = expression(sqrt("|Residuos estandarizados|")),
+    caption = paste(
+      "Fuente: Elaboración propia con base en Our World in Data, 2022 |",
+      "Línea terracota: media |",
+      "Línea chocolate: tendencia LOESS"
+    )
+  ) +
+  
+  # Diseño
+  theme_minimal() +
+  
+  theme(
+    text = element_text(
+      family = "sans",
+      color = "#2B1810"
+    ),
+    
+    plot.title = element_text(
+      face = "bold",
+      size = 16,
+      hjust = 0.5,
+      color = "#3E2416",
+      margin = margin(b = 10)
+    ),
+    
+    plot.subtitle = element_text(
+      size = 12,
+      hjust = 0.5,
+      color = "#8B5E34",
+      margin = margin(b = 20)
+    ),
+    
+    plot.caption = element_text(
+      size = 10,
+      color = "#6D4C2F",
+      hjust = 0.5,
+      margin = margin(t = 15)
+    ),
+    
+    axis.title = element_text(
+      face = "bold",
+      size = 12,
+      color = "#2B1810"
+    ),
+    
+    axis.text = element_text(
+      size = 10,
+      color = "#2B1810"
+    ),
+    
+    panel.grid.major = element_line(
+      color = "#E7D3A8"
+    ),
+    
+    panel.grid.minor = element_line(
+      color = "#F0DFA8"
+    ),
+    
+    plot.background = element_rect(
+      fill = "white",
+      color = NA
+    ),
+    
+    panel.background = element_rect(
+      fill = "#FBF3DD",
+      color = NA
+    )
+  )
+
+print(G_scale)
+```
+
+
+
+En el gráfico se observa que la dispersión de los residuos no permanece constante a medida que aumentan los valores ajustados de generación. La línea de tendencia presenta un crecimiento marcado y alcanza sus valores más altos en los países con mayores niveles de generación estimada. Además, algunas observaciones se encuentran considerablemente alejadas del grupo principal. Este comportamiento indica la presencia de heterocedasticidad, por lo que el supuesto de varianza constante de los errores no se cumple adecuadamente. Esto sugiere que la precisión del modelo no es uniforme para todos los países, especialmente en aquellos con niveles de generación más elevados.
+
+
+
+### VIF
+
+La multicolinealidad entre las variables explicativas se evaluó mediante el Factor de Inflación de la Varianza (VIF). Debido a que el modelo incluye Continente, una variable categórica con varios niveles, se utilizó el GVIF ajustado para facilitar la comparación entre los términos del modelo. Valores elevados indicarían que algunas variables comparten demasiada información entre sí, lo que podría reducir la precisión de los coeficientes estimados.
+
+
+```{r vif-modelo}
+
+library(car)
+library(dplyr)
+library(kableExtra)
+
+# Asegurar que Continente sea categórica
+Base_datos$Continente <- factor(Base_datos$Continente)
+
+# Calcular VIF / GVIF
+vif_resultados <- car::vif(Modelo_final)
+
+# Preparar tabla según el tipo de resultado
+if (is.matrix(vif_resultados)) {
+  
+  tabla_vif <- data.frame(
+    Variable = rownames(vif_resultados),
+    GVIF = vif_resultados[, "GVIF"],
+    Df = vif_resultados[, "Df"],
+    `GVIF ajustado` = vif_resultados[, "GVIF^(1/(2*Df))"],
+    row.names = NULL,
+    check.names = FALSE
+  ) %>%
+    mutate(
+      GVIF = round(GVIF, 3),
+      `GVIF ajustado` = round(`GVIF ajustado`, 3),
+      Diagnóstico = case_when(
+        `GVIF ajustado` < sqrt(5) ~ "ACEPTABLE",
+        `GVIF ajustado` < sqrt(10) ~ "REVISAR",
+        TRUE ~ "ALTO"
+      )
+    ) %>%
+    arrange(desc(`GVIF ajustado`))
+  
+} else {
+  
+  tabla_vif <- data.frame(
+    Variable = names(vif_resultados),
+    VIF = as.numeric(vif_resultados),
+    row.names = NULL
+  ) %>%
+    mutate(
+      VIF = round(VIF, 3),
+      Tolerancia = round(1 / VIF, 4),
+      Diagnóstico = case_when(
+        VIF < 5 ~ "ACEPTABLE",
+        VIF < 10 ~ "REVISAR",
+        TRUE ~ "ALTO"
+      )
+    ) %>%
+    arrange(desc(VIF))
+}
+
+# Presentar tabla
+kbl(
+  tabla_vif,
+  format = "html",
+  caption = "Tabla 8: Análisis de multicolinealidad mediante VIF/GVIF",
+  align = "c"
+) %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed"),
+    full_width = FALSE,
+    font_size = 14,
+    position = "center"
+  ) %>%
+  row_spec(
+    0,
+    background = "#3E2416",
+    color = "#FBF3DD",
+    bold = TRUE
+  ) %>%
+  column_spec(
+    1,
+    bold = TRUE,
+    width = "4cm"
+  ) %>%
+  row_spec(
+    seq(2, nrow(tabla_vif), by = 2),
+    background = "#F5E6C8"
+  ) %>%
+  footnote(
+    general = paste(
+      "Elaboración propia con base en Our World in Data, 2022.",
+      "Para términos con varios grados de libertad se reporta el GVIF ajustado."
+    ),
+    general_title = "Nota:",
+    footnote_as_chunk = TRUE
+  )
+```
+
+
+Los resultados muestran que todas las variables presentan valores de GVIF ajustado dentro de rangos aceptables, por lo que no se evidencian problemas importantes de multicolinealidad en el modelo. Los valores más altos corresponden al PIB (1,806) y la Población (1,797), aunque ambos se mantienen en niveles adecuados. Por su parte, Acceso presenta un valor de 1,580, Consumo de 1,217 y Continente de 1,117. En conjunto, estos resultados indican que, aunque existe cierta relación entre algunas de las variables explicativas, esta no alcanza niveles que representen un problema relevante para la estimación del modelo. Por lo tanto, el supuesto relacionado con la ausencia de multicolinealidad importante se considera satisfecho.
+
+
+
+# Conclusiones
+
+El análisis realizado permitió estudiar la relación entre la generación total de electricidad y diferentes características socioeconómicas y energéticas de 140 países durante 2022. En conjunto, el modelo presentó un R² ajustado de 0,9192 y fue estadísticamente significativo (p < 0,0001), lo que indica que las variables incluidas explican una proporción importante de las diferencias observadas en la generación de electricidad entre los países analizados.
+
+Sin embargo, al evaluar cada predictor de manera individual y manteniendo constantes las demás variables, únicamente el PIB total presentó una asociación estadísticamente significativa con la generación de electricidad (p < 0,0001). La población, el consumo de electricidad per cápita, el acceso a electricidad y el continente no mostraron evidencia suficiente de una asociación independiente al nivel de significancia del 5 %. Esto no implica que estas variables carezcan de relación con la generación, sino que dentro de la especificación utilizada su aporte adicional no resultó estadísticamente significativo.
+
+Los diagnósticos también muestran limitaciones importantes. Los residuos presentan una curvatura marcada, desviaciones respecto a la normalidad y cambios en su dispersión a medida que aumentan los valores ajustados, por lo que los supuestos de linealidad, normalidad y homocedasticidad no se cumplen completamente. En contraste, el análisis mediante VIF/GVIF no evidenció problemas importantes de multicolinealidad entre las variables explicativas. Además, la presencia de países con niveles de generación considerablemente superiores al resto influye en el comportamiento del modelo.
+
+Por lo tanto, el modelo permite responder parcialmente al objetivo de investigación: identifica al PIB como el factor que presenta la asociación estadística más clara con la generación total de electricidad dentro de las variables consideradas y muestra que, en conjunto, estas variables tienen una alta capacidad explicativa. No obstante, las dificultades encontradas en los supuestos impiden considerar la especificación lineal actual como una representación completamente adecuada de las relaciones presentes en los datos. Como extensión, sería conveniente evaluar transformaciones de las variables o especificaciones alternativas que permitan representar mejor las diferencias entre países y reducir la influencia de observaciones extremas.
+
+Finalmente, los resultados deben interpretarse como asociaciones y no como relaciones causales, debido a que el análisis utiliza información observacional de los países para un único año.
+
